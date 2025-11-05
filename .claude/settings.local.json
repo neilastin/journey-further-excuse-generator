@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3001)",
+      "Bash(taskkill /F /PID 25248)",
+      "Bash(taskkill //F //PID 25248)",
+      "Bash(taskkill /F /PID 4676)",
+      "Bash(taskkill //F //PID 4676)",
+      "Bash(git add api/generate-image.ts src/App.tsx src/components/ExcuseCards.tsx src/components/HeadshotUpload.tsx src/components/ImageDisplay.tsx src/components/PhotoEvidence.tsx package.json package-lock.json playwright.config.ts tests/ README-TESTING.md TEST-SUMMARY.md)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Add photo evidence image generation with Gemini 2.5 Flash Image\n\nImplemented complete image generation feature allowing users to generate AI images for their excuses with optional headshot compositing.\n\nNew Components:\n- HeadshotUpload: Drag-and-drop file upload with validation (JPG/PNG, <5MB)\n- ImageDisplay: 16:9 image display with loading states and download\n- PhotoEvidence: Main container orchestrating upload and generation\n\nAPI Integration:\n- Updated generate-image.ts to use Gemini 2.5 Flash Image model\n- Proper request format with contents/parts structure\n- Support for 16:9 aspect ratio via imageConfig\n- Reference image support for headshot compositing\n- 60-second timeout for image generation\n\nState Management:\n- Added image generation logic to App.tsx\n- Images cached per excuse type (excuse1, excuse2, excuse3)\n- Tab synchronization between ExcuseCards and PhotoEvidence\n- Comprehensive error handling\n\nTesting:\n- 126 E2E tests across 3 test suites (Playwright)\n- Test fixtures for file upload validation\n- Responsive design tests (mobile, tablet, desktop)\n- Accessibility testing (ARIA, keyboard navigation)\n\nDesign:\n- Seamless integration with existing dark theme\n- Neon accent colors (green, blue, purple)\n- Framer Motion animations matching current components\n- Fully responsive layout\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

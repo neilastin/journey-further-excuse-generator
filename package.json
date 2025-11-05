@@ -1,0 +1,53 @@
+{
+  "name": "journey-further-excuse-generator",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:api\" \"npm:dev:vite\"",
+    "dev:api": "tsx dev-server.js",
+    "dev:vite": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test:smoke": "playwright test tests/smoke.spec.ts",
+    "test:smoke:headed": "playwright test tests/smoke.spec.ts --headed",
+    "test:smoke:debug": "playwright test tests/smoke.spec.ts --debug",
+    "test:report": "playwright show-report"
+  },
+  "dependencies": {
+    "@sentry/react": "^10.22.0",
+    "@vercel/analytics": "^1.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.545.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.56.1",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/node": "^24.7.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vercel/node": "^5.3.26",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.20.6",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.18.2",
+    "vercel": "^48.2.9",
+    "vite": "^6.0.5"
+  }
+}
