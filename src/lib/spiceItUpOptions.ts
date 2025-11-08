@@ -190,13 +190,14 @@ export const COMEDY_STYLES: ComedyStyleOption[] = [
 export type ExcuseFocus =
   | 'let-ai-decide'
   | 'blame-technology'
-  | 'blame-nature'
-  | 'blame-animals'
-  | 'blame-other-people'
-  | 'blame-yourself'
+  | 'blame-algorithm'
+  | 'blame-budget'
+  | 'blame-seasonality'
+  | 'blame-client'
+  | 'blame-competitor'
+  | 'blame-meetings'
   | 'blame-universe'
-  | 'blame-transport'
-  | 'blame-time';
+  | 'blame-robin-skidmore';
 
 export interface ExcuseFocusOption {
   id: ExcuseFocus;
@@ -219,46 +220,52 @@ export const EXCUSE_FOCUS_OPTIONS: ExcuseFocusOption[] = [
     promptText: 'The excuse should primarily blame technology, apps, devices, or digital systems.'
   },
   {
-    id: 'blame-nature',
-    label: 'Blame Nature',
-    emoji: '🌿',
-    promptText: 'The excuse should primarily blame natural phenomena, weather, or environmental factors.'
+    id: 'blame-algorithm',
+    label: 'Blame The Algorithm',
+    emoji: '📊',
+    promptText: 'The excuse should primarily blame algorithm changes, platform updates, Google core updates, Meta algorithm changes, or search engines constantly moving the goalposts.'
   },
   {
-    id: 'blame-animals',
-    label: 'Blame Animals',
-    emoji: '🐾',
-    promptText: 'The excuse should primarily blame animals, pets, or wildlife.'
+    id: 'blame-budget',
+    label: 'Blame The Budget',
+    emoji: '💰',
+    promptText: 'The excuse should primarily blame insufficient budget, cost constraints, champagne expectations on lemonade money, or the client wanting enterprise results with a startup budget.'
   },
   {
-    id: 'blame-other-people',
-    label: 'Blame Other People',
-    emoji: '👥',
-    promptText: 'The excuse should primarily blame other people, strangers, or human interference.'
+    id: 'blame-seasonality',
+    label: 'Blame Seasonality',
+    emoji: '📅',
+    promptText: 'The excuse should primarily blame seasonal trends, Q4 chaos, Black Friday madness, Christmas campaign rushes, or cyclical industry patterns making everything harder.'
   },
   {
-    id: 'blame-yourself',
-    label: 'Blame Yourself',
-    emoji: '🙋',
-    promptText: 'The excuse should primarily blame your own mistakes, incompetence, or poor judgment.'
+    id: 'blame-client',
+    label: 'Blame The Client',
+    emoji: '🤝',
+    promptText: 'The excuse should primarily blame unclear client requirements, contradictory feedback, last-minute changes, scope creep, or the classic "can you make the logo bigger?" requests.'
+  },
+  {
+    id: 'blame-competitor',
+    label: 'Blame A Competitor',
+    emoji: '🏆',
+    promptText: 'The excuse should primarily blame competitors doing something unexpected, competitor campaigns causing disruption, or rival agencies/brands making strategic moves that complicated everything.'
+  },
+  {
+    id: 'blame-meetings',
+    label: 'Blame Too Many Meetings',
+    emoji: '💼',
+    promptText: 'The excuse should primarily blame excessive meetings, syncs, check-ins, all-hands, stand-ups, retrospectives, alignment sessions, or calendar Tetris preventing actual work from getting done.'
   },
   {
     id: 'blame-universe',
     label: 'Blame The Universe',
     emoji: '🌌',
-    promptText: 'The excuse should primarily blame cosmic forces, fate, destiny, or universal conspiracies.'
+    promptText: 'The excuse should primarily blame cosmic forces, fate, destiny, universal conspiracies, or the fundamental nature of reality conspiring against success.'
   },
   {
-    id: 'blame-transport',
-    label: 'Blame Transport',
-    emoji: '🚗',
-    promptText: 'The excuse should primarily blame transportation issues, traffic, public transit, or vehicles.'
-  },
-  {
-    id: 'blame-time',
-    label: 'Blame Time Itself',
-    emoji: '⏳',
-    promptText: 'The excuse should primarily blame time paradoxes, temporal anomalies, or the nature of time itself.'
+    id: 'blame-robin-skidmore',
+    label: 'Blame Robin Skidmore',
+    emoji: '👔',
+    promptText: 'ROBIN_SKIDMORE_PERSONA_PLACEHOLDER' // Will be replaced by API with actual persona
   }
 ];
 

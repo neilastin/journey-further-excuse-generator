@@ -37,11 +37,11 @@ export default function Header() {
             </motion.div>
           </div>
 
-          {/* Logo - Right side (mirrored) */}
+          {/* Logo - Right side */}
           <img
             src="/logo.svg"
             alt="Journey Further Logo"
-            className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 scale-x-[-1]"
+            className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0"
           />
         </div>
       </div>

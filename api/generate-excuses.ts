@@ -1,4 +1,13 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { getRobinPersona } from '../src/lib/personas/robin-skidmore';
+
+/**
+ * IMPORTANT NOTE ABOUT PERSONA IMPORT:
+ * This import works in both local dev (tsx) and Vercel production:
+ * - Local dev: tsx handles .ts files directly
+ * - Vercel: Compiles TypeScript during deployment
+ * The .js extension is omitted to work in both environments
+ */
 
 /**
  * Serverless function to generate 2 creative excuses using Claude API
@@ -212,13 +221,14 @@ interface ExcuseFocusOption {
 const EXCUSE_FOCUS_OPTIONS: ExcuseFocusOption[] = [
   { id: 'let-ai-decide', promptText: '' },
   { id: 'blame-technology', promptText: 'The excuse should primarily blame technology, apps, devices, or digital systems.' },
-  { id: 'blame-nature', promptText: 'The excuse should primarily blame natural phenomena, weather, or environmental factors.' },
-  { id: 'blame-animals', promptText: 'The excuse should primarily blame animals, pets, or wildlife.' },
-  { id: 'blame-other-people', promptText: 'The excuse should primarily blame other people, strangers, or human interference.' },
-  { id: 'blame-yourself', promptText: 'The excuse should primarily blame your own mistakes, incompetence, or poor judgment.' },
-  { id: 'blame-universe', promptText: 'The excuse should primarily blame cosmic forces, fate, destiny, or universal conspiracies.' },
-  { id: 'blame-transport', promptText: 'The excuse should primarily blame transportation issues, traffic, public transit, or vehicles.' },
-  { id: 'blame-time', promptText: 'The excuse should primarily blame time paradoxes, temporal anomalies, or the nature of time itself.' }
+  { id: 'blame-algorithm', promptText: 'The excuse should primarily blame algorithm changes, platform updates, Google core updates, Meta algorithm changes, or search engines constantly moving the goalposts.' },
+  { id: 'blame-budget', promptText: 'The excuse should primarily blame insufficient budget, cost constraints, champagne expectations on lemonade money, or the client wanting enterprise results with a startup budget.' },
+  { id: 'blame-seasonality', promptText: 'The excuse should primarily blame seasonal trends, Q4 chaos, Black Friday madness, Christmas campaign rushes, or cyclical industry patterns making everything harder.' },
+  { id: 'blame-client', promptText: 'The excuse should primarily blame unclear client requirements, contradictory feedback, last-minute changes, scope creep, or the classic "can you make the logo bigger?" requests.' },
+  { id: 'blame-competitor', promptText: 'The excuse should primarily blame competitors doing something unexpected, competitor campaigns causing disruption, or rival agencies/brands making strategic moves that complicated everything.' },
+  { id: 'blame-meetings', promptText: 'The excuse should primarily blame excessive meetings, syncs, check-ins, all-hands, stand-ups, retrospectives, alignment sessions, or calendar Tetris preventing actual work from getting done.' },
+  { id: 'blame-universe', promptText: 'The excuse should primarily blame cosmic forces, fate, destiny, universal conspiracies, or the fundamental nature of reality conspiring against success.' },
+  { id: 'blame-robin-skidmore', promptText: 'ROBIN_SKIDMORE_PERSONA_PLACEHOLDER' }
 ];
 
 // ============================================================================
@@ -382,6 +392,7 @@ from the story you're telling. They're seasoning, not the main dish.
 /**
  * Build the excuse focus section for the prompt
  * Frame as comedic angle, not rigid constraint
+ * Special handling for Robin Skidmore persona injection
  */
 function buildExcuseFocusPrompt(focusId: string): string {
   if (focusId === 'let-ai-decide' || !focusId) return '';
@@ -389,9 +400,31 @@ function buildExcuseFocusPrompt(focusId: string): string {
   const focusOption = EXCUSE_FOCUS_OPTIONS.find(opt => opt.id === focusId);
   if (!focusOption || !focusOption.promptText) return '';
 
+  let promptText = focusOption.promptText;
+
+  // Special case: Replace Robin Skidmore placeholder with actual persona
+  if (focusId === 'blame-robin-skidmore' && promptText.includes('ROBIN_SKIDMORE_PERSONA_PLACEHOLDER')) {
+    const robinPersona = getRobinPersona();
+
+    promptText = `The excuse should blame Robin Skidmore, CEO & Founder of Journey Further.
+
+${robinPersona}
+
+IMPORTANT MIXING INSTRUCTIONS:
+- Mix generic CEO/founder stereotypes with Robin-specific details to keep excuses varied
+- Sometimes lean heavily on generic CEO tropes: ambitious, workaholic, strategic pivots,
+  "synergy" obsession, motivational speaker energy, hustle culture, vision boards, etc.
+- Sometimes weave in Robin-specific details from the persona above
+- Sometimes combine both approaches for maximum comedy
+- Keep the tone affectionate and cheeky, never mean-spirited
+- Make it clear the excuse is blaming Robin in a playful way (not genuinely malicious)
+
+This ensures each excuse about Robin feels fresh and unpredictable, not repetitive.`;
+  }
+
   return `
 EXCUSE FOCUS:
-${focusOption.promptText}
+${promptText}
 This is your comedic angle, but you still have creative freedom in execution.
 `;
 }
