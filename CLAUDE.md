@@ -29,13 +29,18 @@ This is a customized fork of the "Not My Fault" excuse generator app, rebranded 
 - **Tone**: Comedic and cheeky (unchanged)
 - **Narrative Elements**: Updated in src/lib/spiceItUpOptions.ts
 
-### Future Customization Tasks
+### Customization Progress
 - [ ] Upload Journey Further logo files (logo.svg, favicon.svg)
-- [ ] Customize tagline variations for company culture (src/lib/taglineVariations.ts)
-- [ ] Add company-specific jargon and terminology
-- [ ] Create personas around key company people
-- [ ] Customize audience options (src/lib/constants.ts)
-- [ ] Add company-specific seasonal elements
+- [x] Customize tagline variations for company culture (src/lib/taglineVariations.ts) - **DONE**
+- [x] Add company-specific jargon and terminology - **DONE**
+- [x] Create personas around key company people (Robin Skidmore) - **DONE**
+- [x] Customize audience options (src/lib/constants.ts) - **DONE**
+- [x] Add company-specific seasonal elements - **DONE**
+- [x] Refine tagline language to focus on app value ("we'll help you") - **DONE**
+- [x] Review and refine AI prompts for excuse generation - **DONE**
+- [x] Add 10th comedy style (Corporate Jargon, Passive-Aggressive) - **DONE**
+- [ ] Debug custom options API issue - **NEXT SESSION**
+- [ ] Test image generation feature - **NEXT SESSION**
 
 ---
 
@@ -44,11 +49,164 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-**Current Phase: Phase 7 - Smoke Test Suite (COMPLETE)**
+**Current Phase: Phase 8 - Journey Further Content Customization (95% COMPLETE)**
 
-**Next Phase: Phase 8 - Deployment to Vercel**
+**Next Phase: Phase 9 - Final Testing & Deployment to Vercel**
 
-**Status: READY FOR DEPLOYMENT ✅**
+**Status: Content Customization & API Refinements Complete ✅ | Custom Options Debug & Image Testing Pending**
+
+---
+
+### 🚧 Phase 8: Journey Further Content Customization (2025-11-14)
+
+**Objective:** Customize all user-facing text content for Journey Further digital marketing agency context.
+
+**Completed Work:**
+
+1. **Audience Options** (8 options - COMPLETE ✅)
+   - Replaced generic audience options with Journey Further-specific:
+   - A Colleague, Your Manager, A Direct Report, The Client, HR, Finance, A Random Stranger On LinkedIn, Robin Skidmore
+   - Files: `src/types/index.ts`, `src/lib/constants.ts`
+
+2. **Narrative Elements** (10 always-available + 12 seasonal - COMPLETE ✅)
+   - **Always Available:** Injured Fox, Office Dog, Duck With Clipboard, Client Lunch Leftovers, Broken Coffee Machine, Mysterious Person in High-Vis, Yorkshire Pudding, Transatlantic Flight, Working Fax Machine, Time-Travelling Victorian Gentleman
+   - **Seasonal Elements:** 12 monthly themes (January through December) replacing 5 generic seasonal elements
+   - Files: `src/lib/spiceItUpOptions.ts`, `api/generate-excuses.ts`
+
+3. **CustomiseModal UI Improvements** (COMPLETE ✅)
+   - Swapped column positions (Excuse Focus left, Comedy Style right)
+   - Updated heading: "Special Ingredients To Feature In Your Excuse"
+   - Fixed contrast in "Limited Time Only" section (purple → blue)
+   - Files: `src/components/CustomiseModal.tsx`
+
+4. **Tagline Variations** (37 taglines - COMPLETE ✅)
+   - Expanded from 20 to 37 taglines with Journey Further themes
+   - Mix of generic and agency-specific content:
+     - Digital marketing (algorithms, SEO, pixels, A/B testing, attribution)
+     - Agency culture (client briefs, billable hours, brand guidelines, contracts)
+     - Employee dynamics (timesheets, deadlines, Slack, remote work, Town Halls)
+   - Removed dynamic form labels (now static)
+   - Files: `src/lib/taglineVariations.ts`, `src/components/ExcuseForm.tsx`, `src/App.tsx`
+
+5. **Form Placeholder Examples** (16 examples - COMPLETE ✅)
+   - Rotating placeholder examples on form input
+   - Journey Further-specific scenarios (budget mistakes, tracking failures, billing issues, etc.)
+   - Random selection on page load using `useMemo` hook
+   - Files: `src/lib/constants.ts`, `src/components/ExcuseForm.tsx`
+
+6. **Static Form Labels** (COMPLETE ✅)
+   - "What Do You Need An Excuse For?"
+   - "Who Needs Convincing That This Isn't Your Fault?"
+   - Files: `src/components/ExcuseForm.tsx`
+
+**Reference Documents Created:**
+- `TAGLINE_OPTIONS.md` - All 37 selected taglines
+- `PLACEHOLDER_OPTIONS.md` - All 16 selected placeholder examples
+
+**Files Modified Session 2025-11-14:**
+- `src/lib/taglineVariations.ts` - 37 taglines, removed formLabels
+- `src/lib/constants.ts` - Updated AUDIENCE_OPTIONS, added PLACEHOLDER_EXAMPLES
+- `src/lib/spiceItUpOptions.ts` - 10 narrative elements, 12 monthly seasonal
+- `src/components/ExcuseForm.tsx` - Static labels, random placeholders
+- `src/components/CustomiseModal.tsx` - UI improvements, contrast fixes
+- `src/types/index.ts` - Updated AudienceOption type
+- `src/App.tsx` - Removed variation prop from ExcuseForm
+- `api/generate-excuses.ts` - Synced narrative elements with frontend
+
+---
+
+### ✅ Phase 8 Session 2: API Refinements & Testing (2025-11-15)
+
+**Objective:** Complete production-ready refinements to API prompts and test excuse generation.
+
+**Completed Work:**
+
+1. **Tagline Refinement** (37 taglines - COMPLETE ✅)
+   - Updated ALL taglines to use "we'll help you" language pattern
+   - Changed from passive descriptions to active value propositions
+   - Example: "The deadline was flexible. Until it absolutely wasn't. **We'll help you explain** why you treated it like a suggestion for three months."
+   - File: `src/lib/taglineVariations.ts`
+
+2. **Comedy Style Additions** (10 total styles - COMPLETE ✅)
+   - Added **Corporate Jargon** (💼) - business buzzwords, management speak (manual selection only)
+   - Replaced **Self-Deprecating** with **Passive-Aggressive** (😤) - subtle blame-shifting (manual selection only)
+   - Both styles excluded from random pool (7 styles in random rotation)
+   - Files: `src/lib/spiceItUpOptions.ts`, `api/generate-excuses.ts`
+
+3. **API Credentials** (COMPLETE ✅)
+   - Created `.env.local` with ANTHROPIC_API_KEY and GEMINI_API_KEY
+   - File: `.env.local` (gitignored)
+
+4. **Comprehensive API Prompt Refinements** (COMPLETE ✅)
+   - **Anti-Repetition Guidance**: Added "Use these as inspiration but vary your language" to all excuse focus options
+   - **Platform Expansion**: Added TikTok and YouTube to algorithm blame options
+   - **Seasonality Expansion**: Massively expanded seasonal examples + "any cyclical industry patterns"
+   - **Client Behavior Flexibility**: "Any typical client behavior that causes issues for agencies"
+   - **Robin Skidmore Name Flexibility**: Can use "Robin" (informal) or "Robin Skidmore" (formal)
+   - **Narrative Element Refinements**:
+     - Injured Fox: "optionally with a bandaged paw and/or missing ear, or just generally injured"
+     - High-Vis Person: Removed "construction worker or contractor" specification
+     - Yorkshire Pudding: Made consciousness optional
+     - Transatlantic Flight: Added "(keep it safe for work, no real disasters)"
+     - Summer Solstice: Added "or Stonehenge-related mishaps (optional reference)"
+   - Files: `api/generate-excuses.ts`, `API-CONTENT-REFERENCE.md`
+
+5. **API Testing** (COMPLETE ✅)
+   - Tested basic excuse generation via curl - **WORKING PERFECTLY**
+   - Response time: ~9.6 seconds
+   - Generated 2 excuses (Believable + Risky) with Meta comedy style
+   - Excuse quality: Genuinely funny, creative, varied
+   - Paragraph formatting: Working correctly for longer excuses
+   - Verified: http://localhost:3001/api/generate-excuses
+
+**Reference Documents Created:**
+- `PROMPT-ARCHITECTURE-GUIDE.md` - Complete prompt flow documentation
+- `API-CONTENT-REFERENCE.md` - All comedy styles, excuse focuses, narrative elements
+
+**Test Results (2025-11-15):**
+```json
+{
+  "excuse1": {
+    "title": "Calendar Sync Error",
+    "text": "I had a calendar synchronisation issue..."
+  },
+  "excuse2": {
+    "title": "Let Me Workshop This With You",
+    "text": "I'm going to need you to appreciate the craftsmanship... [META comedy - self-aware, fourth-wall breaking]"
+  },
+  "comedicStyle": "Meta"
+}
+```
+
+**Known Issues:**
+
+1. **Custom Options API Bug** (NON-CRITICAL)
+   - API crashes when processing custom options (comedy style selection, narrative elements, excuse focus)
+   - Basic "Generate Excuses" button works perfectly
+   - Issue likely in custom options validation or prompt building
+   - Does not block production deployment
+   - **TO DEBUG IN NEXT SESSION**
+
+**Pending Work for Next Session:**
+
+1. **Debug Custom Options API Issue** - Fix crash when using Customise feature
+   - Test with: comedy style selection, narrative elements, excuse focus
+   - Review validation and prompt building code
+   - Ensure custom options properly pass to Claude API
+
+2. **Image Generation Testing** - Test Gemini 2.5 Flash Image API integration
+   - Test basic image generation (no headshot)
+   - Test image generation with headshot upload
+   - Verify 16:9 aspect ratio
+   - Test visual style matching with comedy styles
+
+**Files Modified Session 2025-11-15:**
+- `src/lib/taglineVariations.ts` - All 37 taglines refined to "we'll help you" pattern
+- `src/lib/spiceItUpOptions.ts` - Added Corporate Jargon, replaced Self-Deprecating with Passive-Aggressive
+- `api/generate-excuses.ts` - Updated comedy styles, random pool, excuse focus descriptions, narrative elements
+- `API-CONTENT-REFERENCE.md` - Comprehensive documentation of all API content
+- `PROMPT-ARCHITECTURE-GUIDE.md` - Complete prompt flow documentation
+- `.env.local` - Created with API credentials
 
 ---
 

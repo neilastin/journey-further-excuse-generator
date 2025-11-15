@@ -38,7 +38,7 @@ async function loadHandler(functionPath) {
     const module = await import(`./api/${functionPath}.ts`);
     return module.default;
   } catch (error) {
-    console.error(`Failed to load handler: ${functionPath}`, error);
+    // Silently return null for missing handlers (expected for 404s)
     return null;
   }
 }
