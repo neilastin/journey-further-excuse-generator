@@ -83,41 +83,42 @@
     transform: scale(1.01);
   }
 
-  /* Outrageous tab special styling */
-  .outrageous-tab {
+  /* Risky tab special styling when inactive */
+  .risky-tab-inactive {
     position: relative;
     border: 2px solid transparent;
     background-image: linear-gradient(#1a1a1a, #1a1a1a),
-                      linear-gradient(135deg, #00a3b8, #6325f4);
+                      linear-gradient(135deg, #ef4444, #f97316);
     background-origin: border-box;
     background-clip: padding-box, border-box;
   }
 
-  .outrageous-tab::before {
+  .risky-tab-inactive::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(135deg, #00a3b8, #6325f4);
+    background: linear-gradient(135deg, #ef4444, #f97316);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0.5;
-    animation: pulse-glow 2s ease-in-out infinite;
+    opacity: 0.6;
+    animation: risky-glow 1.5s ease-in-out infinite;
   }
 
-  .outrageous-tab:hover {
-    border-color: #00a3b8;
-    box-shadow: 0 0 20px rgba(0, 163, 184, 0.3);
+  .risky-tab-inactive:hover {
+    border-color: #ef4444;
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.4), 0 0 15px rgba(249, 115, 22, 0.3);
+    transform: scale(1.05) rotate(0.5deg);
   }
 
-  @keyframes pulse-glow {
+  @keyframes risky-glow {
     0%, 100% {
-      opacity: 0.3;
+      opacity: 0.4;
     }
     50% {
-      opacity: 0.7;
+      opacity: 0.8;
     }
   }
 }

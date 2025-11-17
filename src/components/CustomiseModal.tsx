@@ -138,26 +138,26 @@ export default function CustomiseModal({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
-        onClick={handleBackdropClick}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
+        layout="position"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ type: 'spring', duration: 0.3 }}
+        className="relative w-full max-w-[600px] h-auto max-h-[85vh] bg-background-card rounded-card shadow-2xl overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
       >
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: 'spring', duration: 0.3 }}
-          className="relative w-full max-w-[600px] max-h-[90vh] bg-background-card rounded-card shadow-2xl overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
           {/* Header */}
           <div className="sticky top-0 z-10 bg-background-card border-b border-background-input px-5 md:px-6 py-4 flex items-center justify-between">
             <h2 id="modal-title" className="text-xl font-bold text-text-primary flex items-center gap-2">
@@ -179,56 +179,10 @@ export default function CustomiseModal({
           </div>
 
           {/* Scrollable Content */}
-          <div className="overflow-y-auto max-h-[calc(90vh-180px)] px-5 md:px-6 py-4 space-y-4">
+          <div className="overflow-y-auto flex-1 min-h-0 px-5 md:px-6 py-4 space-y-4">
             {/* Two Column Layout on Desktop */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-              {/* Left Column: Comedy Style */}
-              <div className="space-y-2">
-                <h3 className="text-base font-semibold text-text-primary">
-                  Comedy Style <span className="text-text-muted text-xs font-normal">(pick one)</span>
-                </h3>
-                <div className="space-y-1.5">
-                  {COMEDY_STYLES.map((style) => (
-                    <label
-                      key={style.id}
-                      className={cn(
-                        'flex items-center gap-2.5 p-2.5 rounded-lg cursor-pointer transition-all',
-                        'hover:bg-background-input',
-                        selectedStyle === style.id && 'bg-background-input ring-2 ring-accent-green',
-                        isLoading && 'opacity-50 cursor-not-allowed'
-                      )}
-                    >
-                      <input
-                        type="radio"
-                        name="comedy-style"
-                        value={style.id}
-                        checked={selectedStyle === style.id}
-                        onChange={(e) => setSelectedStyle(e.target.value as ComedyStyle)}
-                        disabled={isLoading}
-                        className="sr-only"
-                      />
-                      <div
-                        className={cn(
-                          'w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0',
-                          selectedStyle === style.id
-                            ? 'border-accent-green bg-accent-green'
-                            : 'border-text-muted'
-                        )}
-                      >
-                        {selectedStyle === style.id && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-background" />
-                        )}
-                      </div>
-                      <span className="text-2xl" aria-hidden="true">
-                        {style.emoji}
-                      </span>
-                      <span className="text-sm text-text-primary font-medium">{style.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Column: Excuse Focus */}
+              {/* Left Column: Excuse Focus */}
               <div className="space-y-2">
                 <h3 className="text-base font-semibold text-text-primary">
                   Excuse Focus <span className="text-text-muted text-xs font-normal">(pick one)</span>
@@ -273,13 +227,59 @@ export default function CustomiseModal({
                   ))}
                 </div>
               </div>
+
+              {/* Right Column: Comedy Style */}
+              <div className="space-y-2">
+                <h3 className="text-base font-semibold text-text-primary">
+                  Comedy Style <span className="text-text-muted text-xs font-normal">(pick one)</span>
+                </h3>
+                <div className="space-y-1.5">
+                  {COMEDY_STYLES.map((style) => (
+                    <label
+                      key={style.id}
+                      className={cn(
+                        'flex items-center gap-2.5 p-2.5 rounded-lg cursor-pointer transition-all',
+                        'hover:bg-background-input',
+                        selectedStyle === style.id && 'bg-background-input ring-2 ring-accent-green',
+                        isLoading && 'opacity-50 cursor-not-allowed'
+                      )}
+                    >
+                      <input
+                        type="radio"
+                        name="comedy-style"
+                        value={style.id}
+                        checked={selectedStyle === style.id}
+                        onChange={(e) => setSelectedStyle(e.target.value as ComedyStyle)}
+                        disabled={isLoading}
+                        className="sr-only"
+                      />
+                      <div
+                        className={cn(
+                          'w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0',
+                          selectedStyle === style.id
+                            ? 'border-accent-green bg-accent-green'
+                            : 'border-text-muted'
+                        )}
+                      >
+                        {selectedStyle === style.id && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-background" />
+                        )}
+                      </div>
+                      <span className="text-2xl" aria-hidden="true">
+                        {style.emoji}
+                      </span>
+                      <span className="text-sm text-text-primary font-medium">{style.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Special Ingredients (Always Available) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-semibold text-text-primary">
-                  Special Ingredients{' '}
+                  Special Ingredients To Feature In Your Excuse{' '}
                   <span className="text-text-muted text-xs font-normal">
                     (pick up to {MAX_NARRATIVE_ELEMENTS})
                   </span>
@@ -349,20 +349,20 @@ export default function CustomiseModal({
             {limitedTimeElements.length > 0 && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base font-semibold text-accent-purple">Limited Time Only</h3>
+                  <h3 className="text-base font-semibold text-accent-blue">Limited Time Only</h3>
                   <span className="text-xl" aria-hidden="true">
                     ⏰
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-3 rounded-lg bg-accent-purple/10 border border-accent-purple/30">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-3 rounded-lg bg-accent-blue/15 border border-accent-blue/40">
                   {limitedTimeElements.map((element) => (
                     <label
                       key={element.id}
                       className={cn(
                         'flex items-center gap-2.5 p-2.5 rounded-lg cursor-pointer transition-all',
-                        'hover:bg-accent-purple/20',
+                        'hover:bg-accent-blue/20',
                         selectedElements.includes(element.id) &&
-                          'bg-accent-purple/20 ring-2 ring-accent-purple',
+                          'bg-accent-blue/20 ring-2 ring-accent-blue',
                         isElementDisabled(element.id) && 'opacity-50 cursor-not-allowed'
                       )}
                     >
@@ -377,8 +377,8 @@ export default function CustomiseModal({
                         className={cn(
                           'w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0',
                           selectedElements.includes(element.id)
-                            ? 'border-accent-purple bg-accent-purple'
-                            : 'border-accent-purple/50'
+                            ? 'border-accent-blue bg-accent-blue'
+                            : 'border-accent-blue/60'
                         )}
                       >
                         {selectedElements.includes(element.id) && (
@@ -459,6 +459,6 @@ export default function CustomiseModal({
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
   );
 }
+ 

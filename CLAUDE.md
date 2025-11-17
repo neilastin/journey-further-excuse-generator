@@ -210,6 +210,61 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+### ✅ Phase 8 Session 3: UI Refinements & Closing Guidance (2025-11-17)
+
+**Objective:** Refine UI styling for better UX and add optional closing guidance to longer excuses.
+
+**Completed Work:**
+
+1. **Tab Styling Improvements** (COMPLETE ✅)
+   - **Tab Spacing**: Increased gap between Believable and Risky tabs (gap-2 → gap-4)
+   - **Risky Tab Enhancement**: Made the Risky tab more visually exciting:
+     - Changed emojis from ✨ to 🔥💥 (fire and explosion)
+     - Active state: Red-to-orange gradient (from-red-500 to-orange-500)
+     - Inactive state: Animated red/orange gradient border with pulsing glow
+     - Bouncing emoji animation
+     - Dramatic hover effects: glow, scale (1.05), and rotation (0.5deg)
+     - Red focus ring to match danger/risky theme
+   - **Title Contrast Fix**: Changed Believable excuse title badge from dark purple to brighter blue for better readability
+   - Files: `src/components/ExcuseCards.tsx`, `src/components/ExcuseCard.tsx`, `src/index.css`
+
+2. **API Prompt Enhancement - Closing Reinforcement** (COMPLETE ✅)
+   - Added optional closing guidance to Excuse 2 (Risky) section
+   - For excuses 4+ sentences, Claude now considers adding a final blame-deflection statement
+   - Helps remind readers "this is an excuse, not just a story"
+   - Examples: "So really, who's to say this was my responsibility?", "How was I supposed to know?", "Clearly beyond my control"
+   - Kept optional/natural - only used if it strengthens the excuse
+   - Files: `api/generate-excuses.ts` (lines 793-802)
+
+3. **CustomiseModal Layout Fix Attempt** (INCOMPLETE ⚠️)
+   - Attempted to fix modal "jump" and blank space issue when selecting special ingredients
+   - Changes made:
+     - Removed AnimatePresence wrapper (was causing layout recalculations)
+     - Added `layout="position"` to motion.div for animation optimization
+     - Changed height constraints: `max-h-[90vh]` → `h-auto max-h-[85vh]`
+     - Added `flex flex-col` to modal container
+     - Changed scrollable content from `max-h-[calc(90vh-180px)]` to `flex-1 min-h-0`
+   - **Status**: Build errors cleared, but modal layout issue PERSISTS
+   - Files: `src/components/CustomiseModal.tsx`
+
+**Known Issues:**
+
+1. **CustomiseModal Layout Bug** (CRITICAL - UNRESOLVED ⚠️)
+   - Modal still "jumps" and creates blank space when selecting special ingredient checkboxes
+   - Root cause: Unknown (AnimatePresence removal did not resolve)
+   - Impact: Poor UX when using Customise feature
+   - **TO DEBUG IN NEXT SESSION**
+   - Possible next steps: Review checkbox state management, investigate Framer Motion layout animations, check for CSS conflicts
+
+**Files Modified Session 2025-11-17:**
+- `api/generate-excuses.ts` - Added optional closing reinforcement guidance (lines 793-802)
+- `src/components/ExcuseCards.tsx` - Tab spacing and Risky tab visual enhancements
+- `src/components/ExcuseCard.tsx` - Title badge contrast fix (purple → blue)
+- `src/index.css` - Added risky-tab-inactive class with animated gradient border
+- `src/components/CustomiseModal.tsx` - Attempted layout fix (AnimatePresence removal, flexbox)
+
+---
+
 ### ✅ Phase 7 Completion: Smoke Test Suite (2025-10-29)
 
 **Testing Strategy Pivot:**

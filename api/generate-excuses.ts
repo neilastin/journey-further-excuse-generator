@@ -790,6 +790,17 @@ FORMATTING - VERY IMPORTANT:
 - Each paragraph should be 2-3 sentences maximum
 - This makes longer excuses easier to read and more impactful
 
+CLOSING REINFORCEMENT (for longer excuses):
+- If your excuse is 4+ sentences, consider ending with a final statement that reinforces blame deflection
+- This helps remind the reader "this is an excuse, not just a story"
+- Keep it natural to your comedy style - don't force it if the excuse already ends strongly
+- Example closing types:
+  • Blame deflection: "So really, who's to say this was my responsibility?"
+  • Rhetorical question: "How was I supposed to know the algorithm would do that?"
+  • Matter-of-fact conclusion: "Clearly beyond my control."
+  • Victim framing: "If anything, I'm the real victim here."
+- This is OPTIONAL - only use if it strengthens the excuse and flows naturally
+
 CREATIVITY GUIDELINES:
 ✓ Be surprising and unexpected
 ✓ Layer multiple comedic elements

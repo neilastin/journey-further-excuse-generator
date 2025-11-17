@@ -51,7 +51,7 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
 
   const tabs: { type: ExcuseType; label: string; emoji?: string }[] = [
     { type: 'believable', label: 'Believable' },
-    { type: 'risky', label: 'Risky!', emoji: '✨' },
+    { type: 'risky', label: 'Risky!', emoji: '🔥💥' },
   ];
 
   const activeExcuse = excuseData[activeTab];
@@ -63,7 +63,7 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
       </h2>
 
       {/* Tab Navigation */}
-      <div className="flex justify-center gap-2 mb-8 max-w-2xl mx-auto">
+      <div className="flex justify-center gap-4 mb-8 max-w-2xl mx-auto">
         {tabs.map(({ type, label, emoji }) => {
           const isActive = activeTab === type;
           const isRisky = type === 'risky';
@@ -76,10 +76,13 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
                 'relative flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300',
                 'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background',
                 isActive
-                  ? 'bg-accent-green text-background shadow-lg shadow-accent-green/30 scale-105'
+                  ? isRisky
+                    ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/40 scale-105'
+                    : 'bg-accent-green text-background shadow-lg shadow-accent-green/30 scale-105'
                   : 'bg-background-card text-text-secondary hover:text-text-primary hover:bg-background-input',
-                isRisky && !isActive && 'outrageous-tab',
-                isRisky && 'focus:ring-accent-green'
+                isRisky && !isActive && 'risky-tab-inactive',
+                isRisky && 'focus:ring-red-500',
+                !isRisky && 'focus:ring-accent-green'
               )}
               aria-pressed={isActive}
               aria-label={`Show ${label} excuse`}
@@ -89,7 +92,7 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
                 {emoji && (
                   <span className={cn(
                     'text-lg',
-                    isRisky && !isActive && 'animate-pulse'
+                    isRisky && !isActive && 'animate-bounce'
                   )}>
                     {emoji}
                   </span>
@@ -100,7 +103,12 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute inset-0 bg-accent-green rounded-lg -z-10"
+                  className={cn(
+                    'absolute inset-0 rounded-lg -z-10',
+                    isRisky
+                      ? 'bg-gradient-to-r from-red-500 to-orange-500'
+                      : 'bg-accent-green'
+                  )}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}

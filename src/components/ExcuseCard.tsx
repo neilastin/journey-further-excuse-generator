@@ -21,7 +21,7 @@ const accentColorClasses = {
   purple: {
     border: 'border-accent-purple',
     glow: 'shadow-lg shadow-accent-purple/20',
-    badge: 'bg-accent-purple/20 text-accent-purple',
+    badge: 'bg-accent-blue/30 text-accent-blue',
     hoverShadow: '0 12px 40px rgba(181, 123, 255, 0.3)',
   },
   green: {
