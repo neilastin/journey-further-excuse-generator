@@ -573,6 +573,100 @@ LIGHTING:
 - Security camera aesthetic
 - Ominous shadows
 - Night vision or harsh fluorescent`
+      },
+
+      'Passive-Aggressive': {
+        withHeadshot: `VISUAL STYLE: Passive-Aggressive / Subtle Hostility Photography
+Create a photorealistic image with SUBTLY HOSTILE, PASSIVE-AGGRESSIVE atmosphere. The subject should appear innocent on the surface but with underlying tension and subtle blame-shifting energy.
+
+PASSIVE-AGGRESSIVE VISUAL ELEMENTS:
+- Subject with a "helpful" smile that doesn't reach their eyes
+- Overly polite body language with subtle hostility
+- Strategic positioning that says "I tried to help but..."
+- Props showing evidence of others' failures
+- Background elements that subtly shift blame
+
+COMPOSITION:
+- Subject positioned as the "helpful victim"
+- Evidence of others' mistakes prominently displayed
+- Sympathetic framing that implies "I did my part"
+- Strategic placement of blame-shifting props
+
+LIGHTING:
+- Clean, professional lighting (nothing to hide)
+- Slightly cold, clinical feel
+- Even lighting that says "everything is fine"
+- No dramatic shadows (we're being reasonable here)`,
+
+        withoutHeadshot: `VISUAL STYLE: Passive-Aggressive / Subtle Hostility Evidence
+Create environmental evidence with PASSIVE-AGGRESSIVE, BLAME-SHIFTING aesthetic. Show a scene that subtly implies someone else is at fault.
+
+PASSIVE-AGGRESSIVE VISUAL ELEMENTS:
+- Evidence of "helpful" attempts
+- Signs of others' incompetence
+- Sticky notes with "helpful reminders"
+- Printed emails or documentation
+- Evidence arranged to shift blame
+
+COMPOSITION:
+- Scene that tells a story of "I tried"
+- Props showing others' failures
+- Evidence strategically arranged
+- Sympathetic victim framing
+
+LIGHTING:
+- Clinical, professional lighting
+- Everything clearly visible (nothing hidden)
+- Cold, sterile feel
+- Evidence well-lit for documentation`
+      },
+
+      'Corporate Jargon': {
+        withHeadshot: `VISUAL STYLE: Corporate / Business Stock Photography
+Create a photorealistic image with CORPORATE, BUSINESS PROFESSIONAL aesthetic. The subject should appear as a typical corporate professional in a business environment.
+
+CORPORATE VISUAL ELEMENTS:
+- Subject in business attire
+- Corporate office environment
+- Business props (laptops, charts, whiteboards)
+- Meeting room or office setting
+- Professional corporate demeanor
+- Business buzzword materials (synergy charts, etc.)
+
+COMPOSITION:
+- Classic corporate photography angles
+- Subject positioned professionally
+- Business-appropriate framing
+- Stock photo-style composition
+
+LIGHTING:
+- Clean corporate office lighting
+- Professional, well-lit environment
+- Bright, optimistic corporate feel
+- Standard office fluorescent or natural light`,
+
+        withoutHeadshot: `VISUAL STYLE: Corporate / Business Environment Evidence
+Create environmental evidence with CORPORATE, BUSINESS aesthetic. Show a corporate office scene with business elements.
+
+CORPORATE VISUAL ELEMENTS:
+- Corporate office environment
+- Business materials and props
+- Charts, graphs, whiteboards
+- Meeting room or desk setup
+- Corporate documentation
+- Business buzzword materials
+
+COMPOSITION:
+- Corporate stock photo style
+- Professional business framing
+- Office environment focus
+- Business materials prominently displayed
+
+LIGHTING:
+- Standard corporate lighting
+- Clean, professional feel
+- Well-lit office environment
+- Bright, corporate aesthetic`
       }
     };
 
