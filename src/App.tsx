@@ -139,7 +139,6 @@ function App() {
 
         <div ref={formRef} className="max-w-form mx-auto px-mobile md:px-desktop">
           <ExcuseForm
-            variation={variation}
             onSubmit={generateExcuses}
             isLoading={isGeneratingExcuses}
           />

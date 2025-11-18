@@ -38,16 +38,14 @@ export interface ExcusesResponse {
 
 // Form dropdown options
 export type AudienceOption =
-  | 'My manager'
-  | 'My partner'
-  | 'My parents'
-  | 'My friend'
-  | 'My teacher'
-  | 'My date'
-  | 'A client'
-  | 'A coworker'
-  | 'A police officer'
-  | 'Anyone and everyone';
+  | 'A Colleague'
+  | 'Your Manager'
+  | 'A Direct Report'
+  | 'The Client'
+  | 'HR'
+  | 'Finance'
+  | 'A Random Stranger On LinkedIn'
+  | 'Robin Skidmore';
 
 // API request types
 export interface CustomExcuseOptions {

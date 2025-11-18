@@ -1,6 +1,6 @@
 /**
- * Tagline variations with matching form labels
- * Each variation creates tone consistency from tagline → form → placeholder
+ * Tagline variations for the hero section
+ * Each variation is randomly selected on page load
  */
 
 export interface TaglineVariation {
@@ -8,232 +8,229 @@ export interface TaglineVariation {
     line1: string;
     line2: string;
   };
-  formLabels: {
-    situation: string;
-    audience: string;
-    placeholder: string;
-  };
 }
 
 export const taglineVariations: TaglineVariation[] = [
   {
     tagline: {
       line1: "Bad things happen. You get blamed.",
-      line2: "Let's craft an excuse that reflects that truth."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's blaming you?",
-      placeholder: "Example: I missed the quarterly presentation that my boss spent three weeks preparing for"
-    }
-  },
-  {
-    tagline: {
-      line1: "Sometimes the truth needs a little polish.",
-      line2: "Generate perfectly reasonable explanations. No judgement."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who are you explaining to?",
-      placeholder: "Example: I showed up two hours late to my daughter's first piano recital"
+      line2: "We'll help you craft an excuse that reflects the truth. Your truth."
     }
   },
   {
     tagline: {
       line1: "Look, we both know you're innocent. Technically.",
-      line2: "Let's make sure everyone else knows it too."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who needs convincing?",
-      placeholder: "Example: I completely forgot about our 10-year wedding anniversary dinner reservation"
+      line2: "We'll help you make sure everyone else knows it too."
     }
   },
   {
     tagline: {
       line1: "Everyone deserves a good defence. Even you.",
-      line2: "Especially you. Generate excuses tailored to your situation."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's asking?",
-      placeholder: "Example: I didn't finish the project that's been due for six months and the client is furious"
+      line2: "Especially you. We'll generate excuses tailored to your situation."
     }
   },
   {
     tagline: {
       line1: "Correlation isn't causation.",
-      line2: "Just because you were there doesn't mean it's your fault."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's connecting the dots?",
-      placeholder: "Example: The entire company database crashed five minutes after I ran my script"
+      line2: "We'll help you prove being there doesn't mean it's your fault."
     }
   },
   {
     tagline: {
       line1: "The universe has a funny way of pointing fingers.",
-      line2: "Usually at you. Let's redirect that blame."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's pointing fingers?",
-      placeholder: "Example: Our biggest client left after I accidentally replied-all with complaints about them"
+      line2: "Usually at you. We'll help you redirect that blame elsewhere."
     }
   },
   {
     tagline: {
       line1: "Accountability is overrated.",
-      line2: "Generate believable explanations for literally anything."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who wants accountability?",
-      placeholder: "Example: I spent the entire marketing budget on a conference in Ibiza that I forgot to tell anyone about"
+      line2: "We'll generate believable explanations for literally anything."
     }
   },
   {
     tagline: {
       line1: "You're not avoiding responsibility.",
-      line2: "You're strategically reframing the narrative."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's hearing your side?",
-      placeholder: "Example: I missed the emergency call from my boss whilst I was at the beach for the weekend"
+      line2: "We'll help you strategically reframe the narrative. Big difference."
     }
   },
   {
     tagline: {
       line1: "It's not lying if you believe it.",
-      line2: "We'll help you believe it. Generate excuses that convince everyone."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who do you need to convince?",
-      placeholder: "Example: I ignored 47 reminder emails about submitting my expense reports before the audit"
+      line2: "We'll help you believe it. And convince everyone else too."
     }
   },
   {
     tagline: {
       line1: "Context is everything.",
-      line2: "And with the right context, nothing is your fault."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's missing the context?",
-      placeholder: "Example: I cancelled our holiday plans that we booked 18 months ago, three days before departure"
-    }
-  },
-  {
-    tagline: {
-      line1: "Bad timing. Wrong place. Totally innocent.",
-      line2: "Let's make sure your story reflects these facts."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who needs your side?",
-      placeholder: "Example: I arrived four hours late to my own surprise birthday party that everyone flew in for"
+      line2: "We'll provide the right context. The kind where nothing is your fault."
     }
   },
   {
     tagline: {
       line1: "They're going to ask questions.",
       line2: "We'll make sure you have answers. Very good answers."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's asking questions?",
-      placeholder: "Example: I completely forgot about the board meeting where I was supposed to present our annual results"
-    }
-  },
-  {
-    tagline: {
-      line1: "Plausible deniability is an art form.",
-      line2: "Consider us your personal gallery."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who are you explaining to?",
-      placeholder: "Example: I didn't see any of the 23 text messages about collecting my mother-in-law from the airport"
-    }
-  },
-  {
-    tagline: {
-      line1: "You were merely adjacent to the problem.",
-      line2: "Generate excuses that establish proper distance."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who thinks you're involved?",
-      placeholder: "Example: The office printer exploded in flames exactly three seconds after I hit print on my 500-page document"
-    }
-  },
-  {
-    tagline: {
-      line1: "Responsibility is a spectrum.",
-      line2: "We specialise in the 'definitely not me' end."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's asking about it?",
-      placeholder: "Example: I left the front door unlocked and someone walked in and stole everything we own"
-    }
-  },
-  {
-    tagline: {
-      line1: "Every story has two sides.",
-      line2: "Yours just happens to be more convenient."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who heard the other side first?",
-      placeholder: "Example: I left my best friend's wedding reception during the speeches to go to a different party"
     }
   },
   {
     tagline: {
       line1: "The facts are debatable. Highly debatable.",
-      line2: "Let's debate them in your favour."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who are we debating with?",
-      placeholder: "Example: I turned in my dissertation three weeks after the final deadline for graduation"
+      line2: "We'll help you debate them in your favour. Vigorously."
     }
   },
   {
     tagline: {
       line1: "Mistakes were made. By someone.",
-      line2: "Generate excuses proving that someone wasn't you."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who thinks it was you?",
-      placeholder: "Example: I accidentally deleted the only backup copy of five years of company financial records"
+      line2: "We'll generate excuses proving that someone wasn't you."
     }
   },
   {
     tagline: {
-      line1: "You're not making excuses.",
-      line2: "You're providing alternative perspectives on reality."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who needs perspective?",
-      placeholder: "Example: I didn't attend my sister's birthday party that she had been planning for 11 months"
+      line1: "The algorithm changed. Again. Obviously.",
+      line2: "We'll explain why your campaign tanked through no fault of yours."
     }
   },
   {
     tagline: {
-      line1: "Life is complicated. Blame is simple.",
-      line2: "Let's complicate the blame part."
-    },
-    formLabels: {
-      situation: "What happened?",
-      audience: "Who's simplifying the blame?",
-      placeholder: "Example: I lost my house keys, car keys, and work badge all in the same week during the busiest time of year"
+      line1: "SEO takes time. Conveniently, unlimited time.",
+      line2: "We'll explain why those rankings still haven't materialised. Convincingly."
+    }
+  },
+  {
+    tagline: {
+      line1: "The data tells a story. We'll help you tell a better one.",
+      line2: "We'll generate explanations for metrics that absolutely don't make sense."
+    }
+  },
+  {
+    tagline: {
+      line1: "Attribution is basically astrology anyway.",
+      line2: "We'll create perfectly reasonable explanations for those abysmal figures."
+    }
+  },
+  {
+    tagline: {
+      line1: "The pixel stopped firing. Probably. Maybe.",
+      line2: "We'll generate technical excuses that sound impressively complicated."
+    }
+  },
+  {
+    tagline: {
+      line1: "A/B testing revealed something. We're still analysing what.",
+      line2: "We'll explain why you need another three months. At least."
+    }
+  },
+  {
+    tagline: {
+      line1: "Content is king. Unfortunately, the king is missing.",
+      line2: "We'll help you explain why the blog hasn't been updated since 2019."
+    }
+  },
+  {
+    tagline: {
+      line1: "Engagement is down. Bots are getting smarter at ignoring you.",
+      line2: "We'll generate excuses for your social media disasters. All of them."
+    }
+  },
+  {
+    tagline: {
+      line1: "The client brief was clear. Clearly confusing.",
+      line2: "We'll explain why you built something completely different. Brilliantly different."
+    }
+  },
+  {
+    tagline: {
+      line1: "Billable hours are flexible. Very flexible.",
+      line2: "We'll generate timesheet entries that sound impressively legitimate."
+    }
+  },
+  {
+    tagline: {
+      line1: "The brand guidelines say one thing. Your heart says another.",
+      line2: "We'll justify why you followed your instincts. Creative freedom and all that."
+    }
+  },
+  {
+    tagline: {
+      line1: "The contract clearly states... something you didn't read properly.",
+      line2: "We'll help you explain why you promised something you can't deliver."
+    }
+  },
+  {
+    tagline: {
+      line1: "Your timesheet is due. Your memory is selective.",
+      line2: "We'll generate plausible reconstructions of last week's activities. Very plausible."
+    }
+  },
+  {
+    tagline: {
+      line1: "The deadline was flexible. Until it absolutely wasn't.",
+      line2: "We'll help you explain why you treated it like a suggestion for three months."
+    }
+  },
+  {
+    tagline: {
+      line1: "You weren't ignoring Slack. You were focusing deeply.",
+      line2: "We'll generate productivity explanations for your radio silence. Deep work, innit."
+    }
+  },
+  {
+    tagline: {
+      line1: "The team meeting clashed with something. Anything.",
+      line2: "We'll create scheduling conflicts that sound more important than they are."
+    }
+  },
+  {
+    tagline: {
+      line1: "Remote working means flexible hours. Very, very flexible.",
+      line2: "We'll explain why you responded to that urgent email at 11am the next day."
+    }
+  },
+  {
+    tagline: {
+      line1: "The Town Hall was scheduled. Your calendar disagreed.",
+      line2: "We'll generate technical explanations for your mysterious absence."
+    }
+  },
+  {
+    tagline: {
+      line1: "You missed the client call. Your lunch ran long. Very long.",
+      line2: "We'll generate prioritisation explanations that sound strategic. Visionary, even."
+    }
+  },
+  {
+    tagline: {
+      line1: "The project budget you managed has somehow evaporated.",
+      line2: "We'll explain those expenses that seemed reasonable at the time. Still do, really."
+    }
+  },
+  {
+    tagline: {
+      line1: "Your presentation is tomorrow. You started it never.",
+      line2: "We'll generate time management explanations for your chronic procrastination."
+    }
+  },
+  {
+    tagline: {
+      line1: "Team drinks were mandatory. Your absence was noted.",
+      line2: "We'll create work-life boundary excuses that don't sound antisocial. Promise."
+    }
+  },
+  {
+    tagline: {
+      line1: "The training session you skipped is now business-critical knowledge.",
+      line2: "We'll explain why you'll need extensive catch-up time. And budget. Lots of budget."
+    }
+  },
+  {
+    tagline: {
+      line1: "Analytics say one thing. Your gut says another. Your gut won.",
+      line2: "We'll generate data-driven justifications for ignoring all that data."
+    }
+  },
+  {
+    tagline: {
+      line1: "You had ample prep time, but chose doomscrolling",
+      line2: "We'll generate confident explanations for totally winging that last call."
     }
   }
 ];

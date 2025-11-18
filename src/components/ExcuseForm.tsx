@@ -1,13 +1,11 @@
-import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
+import { useState, useEffect, useMemo, type FormEvent, type ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AUDIENCE_OPTIONS, LOADING_MESSAGES, LOADING_MESSAGE_INTERVAL } from '@/lib/constants';
-import type { TaglineVariation } from '@/lib/taglineVariations';
+import { AUDIENCE_OPTIONS, LOADING_MESSAGES, LOADING_MESSAGE_INTERVAL, getRandomPlaceholder } from '@/lib/constants';
 import type { CustomExcuseOptions } from '@/types';
 import { cn } from '@/lib/utils';
 import CustomiseModal from './CustomiseModal';
 
 interface ExcuseFormProps {
-  variation: TaglineVariation;
   onSubmit: (data: {
     scenario: string;
     audience: string;
@@ -22,12 +20,15 @@ interface FormErrors {
   audience?: string;
 }
 
-export default function ExcuseForm({ variation, onSubmit, isLoading, disabled = false }: ExcuseFormProps) {
+export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: ExcuseFormProps) {
   const [scenario, setScenario] = useState('');
   const [audience, setAudience] = useState('');
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [messageIndex, setMessageIndex] = useState(0);
   const [isCustomiseOpen, setIsCustomiseOpen] = useState(false);
+
+  // Get a random placeholder on component mount (only once)
+  const placeholderText = useMemo(() => getRandomPlaceholder(), []);
 
   useEffect(() => {
     if (!isLoading) {
@@ -129,13 +130,13 @@ export default function ExcuseForm({ variation, onSubmit, isLoading, disabled = 
       {/* Scenario Textarea */}
       <div className="space-y-2">
         <label htmlFor="scenario" className="text-text-primary font-medium mb-2 block">
-          {variation.formLabels.situation}
+          What Do You Need An Excuse For?
         </label>
         <textarea
           id="scenario"
           value={scenario}
           onChange={handleScenarioChange}
-          placeholder={variation.formLabels.placeholder}
+          placeholder={`Example: ${placeholderText}`}
           rows={3}
           disabled={isLoading || disabled}
           className={cn(
@@ -160,7 +161,7 @@ export default function ExcuseForm({ variation, onSubmit, isLoading, disabled = 
       {/* Audience Select */}
       <div className="space-y-2">
         <label htmlFor="audience" className="text-text-primary font-medium mb-2 block">
-          {variation.formLabels.audience}
+          Who Needs Convincing That This Isn't Your Fault?
         </label>
         <select
           id="audience"

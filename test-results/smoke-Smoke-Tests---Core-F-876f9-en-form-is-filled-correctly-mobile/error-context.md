@@ -1,0 +1,241 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic:
+    - generic: 🤠
+    - generic: 🤠
+    - generic: 🤠
+    - generic: 🥾
+    - generic: 🥾
+    - generic: 🥾
+    - generic: 🐴
+    - generic: 🐴
+    - generic: 🎸
+    - generic: 🎸
+    - generic: ⭐
+    - generic: ⭐
+    - generic: ⭐
+    - generic: 🌟
+    - generic: 🌵
+    - generic: 🌵
+    - generic: 🎶
+    - generic: 🎶
+    - generic: ✨
+    - generic: ✨
+    - generic: ✨
+    - generic: 🧲
+    - generic: 🧲
+    - generic: 🎀
+    - generic: 🎀
+    - generic: 🎄
+    - generic: 🎁
+    - generic: 🎀
+    - generic: 🌟
+    - generic: 🎄
+    - generic: 🎁
+    - generic: 🤠
+    - generic: 🥾
+    - generic: 🎸
+  - generic [ref=e3]:
+    - generic:
+      - generic: 🤠
+      - generic: 🤠
+      - generic: 🤠
+      - generic: 🥾
+      - generic: 🥾
+      - generic: 🥾
+      - generic: 🐴
+      - generic: 🐴
+      - generic: 🎸
+      - generic: 🎸
+      - generic: ⭐
+      - generic: ⭐
+      - generic: ⭐
+      - generic: 🌟
+      - generic: 🌵
+      - generic: 🌵
+      - generic: 🎶
+      - generic: 🎶
+      - generic: ✨
+      - generic: ✨
+      - generic: ✨
+      - generic: 🧲
+      - generic: 🧲
+      - generic: 🎀
+      - generic: 🎀
+      - generic: 🎄
+      - generic: 🎁
+      - generic: 🎀
+      - generic: 🌟
+      - generic: 🎄
+      - generic: 🎁
+      - generic: 🤠
+      - generic: 🥾
+      - generic: 🎸
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "1"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "2"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "3"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "4"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "5"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "6"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "7"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "8"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "9"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "10"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "11"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "12"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "13"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "14"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "15"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "16"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "17"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "18"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "19"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "20"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "21"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "22"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "23"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic: "24"
+                - img
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                - generic:
+                  - img
+                - generic:
+                  - img
+                - generic:
+                  - img
+              - generic:
+                - generic: "25"
+                - img
+  - button "Music controls" [ref=e5]:
+    - img [ref=e6]
+  - generic [ref=e10]:
+    - heading "Gracie's Christmas Countdown" [level=1] [ref=e11]
+    - paragraph [ref=e12]: 🎄 December 2025 🎄
+```

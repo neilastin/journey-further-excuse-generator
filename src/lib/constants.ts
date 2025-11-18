@@ -3,16 +3,14 @@ import { taglineVariations } from './taglineVariations';
 
 // Form dropdown options
 export const AUDIENCE_OPTIONS: AudienceOption[] = [
-  'My manager',
-  'My partner',
-  'My parents',
-  'My friend',
-  'My teacher',
-  'My date',
-  'A client',
-  'A coworker',
-  'A police officer',
-  'Anyone and everyone',
+  'A Colleague',
+  'Your Manager',
+  'A Direct Report',
+  'The Client',
+  'HR',
+  'Finance',
+  'A Random Stranger On LinkedIn',
+  'Robin Skidmore',
 ];
 
 // Loading messages (55 messages from spec)
@@ -84,30 +82,9 @@ export const LOADING_MESSAGE_INTERVAL = 2000; // 2 seconds per message
 export const CARD_STAGGER_DELAY = 0.2; // 0.2s between card animations
 export const COPY_SUCCESS_DURATION = 2000; // 2 seconds "Copied!" display
 
-// Randomized excuse titles (20 per category)
+// Randomized excuse titles (20 per excuse type)
+// Note: App generates 2 excuses - Believable (excuse1) and Risky (excuse2)
 export const EXCUSE_TITLES = {
-  technical: [
-    "The Professor's Defense",
-    "The Expert's Analysis",
-    "The Technical Breakdown",
-    "The Scientific Explanation",
-    "The Certified Report",
-    "The Academic Paper",
-    "The Engineer's Logic",
-    "The Doctorate Defense",
-    "The Analytical Approach",
-    "The Research Findings",
-    "The Systems Overview",
-    "The Technical Audit",
-    "The Scholar's Take",
-    "The Laboratory Results",
-    "The Quantum Explanation",
-    "The Algorithm's Verdict",
-    "The Data-Driven Defense",
-    "The Peer-Reviewed Story",
-    "The Calibrated Response",
-    "The Forensic Report"
-  ],
   believable: [
     "The Safe Bet",
     "The Straight Story",
@@ -130,32 +107,32 @@ export const EXCUSE_TITLES = {
     "The Reasonable Doubt",
     "The Solid Alibi"
   ],
-  outrageous: [
-    "The Legendary Tale",
-    "The Wild Story",
-    "The Conspiracy Theory",
-    "The Epic Saga",
-    "The Blockbuster Plot",
-    "The Hollywood Version",
-    "The Myth in the Making",
-    "The Urban Legend",
-    "The Plot Twist",
-    "The Fiction Bestseller",
-    "The Fever Dream",
-    "The Tall Tale",
-    "The Theatrical Performance",
-    "The Movie Script",
-    "The Fantasy Novel",
-    "The Sci-Fi Adventure",
-    "The Supernatural Event",
-    "The Time Traveler's Log",
-    "The Multiverse Incident",
-    "The Interdimensional Mix-up"
+  risky: [
+    "The Bold Gambit",
+    "The Creative Interpretation",
+    "The Inspired Defense",
+    "The Unexpected Angle",
+    "The Strategic Narrative",
+    "The Calculated Risk",
+    "The Artistic License",
+    "The Audacious Claim",
+    "The Daring Explanation",
+    "The Unconventional Truth",
+    "The Imaginative Account",
+    "The Spirited Defense",
+    "The Colorful Story",
+    "The Ambitious Take",
+    "The Vivid Recollection",
+    "The Elaborate Theory",
+    "The Distinctive Version",
+    "The Original Perspective",
+    "The Adventurous Alibi",
+    "The Dramatic Retelling"
   ]
 };
 
 // Get a random title for a given excuse type
-export const getRandomExcuseTitle = (type: 'technical' | 'believable' | 'outrageous'): string => {
+export const getRandomExcuseTitle = (type: 'believable' | 'risky'): string => {
   const titles = EXCUSE_TITLES[type];
   return titles[Math.floor(Math.random() * titles.length)];
 };
@@ -176,4 +153,32 @@ export const TAGLINES: Tagline[] = taglineVariations.map(v => v.tagline);
 export function getRandomTagline(): Tagline {
   const randomIndex = Math.floor(Math.random() * TAGLINES.length);
   return TAGLINES[randomIndex];
+}
+
+// Form placeholder examples (16 examples)
+export const PLACEHOLDER_EXAMPLES = [
+  "I missed the client deadline that everyone's been working towards for three months",
+  "The tracking broke three weeks ago and I only just noticed",
+  "I accidentally set the daily budget to £10,000 instead of £100 and spent the entire monthly budget overnight",
+  "I forgot to exclude existing customers from the acquisition campaign and wasted £5k targeting people who already bought",
+  "The landing page has been linking to a 404 error for two weeks",
+  "I've been reporting on vanity metrics for six months and just realised we've generated no actual revenue",
+  "I ran A/B test for 4 months, but both versions were exactly the same",
+  "The campaign has been running for 6 weeks targeting Austria instead of Australia. Hoppla!",
+  "I accidentally replied-all to a client email with my honest opinion about their awful brand guidelines",
+  "I've been billing the client for 20 hours a week but actually spending 4 hours and hoping nobody asks questions",
+  "I accidentally shared the screen showing my personal chat where I was complaining about the client's bad haircut",
+  "I quoted the client £5k for a project that's going to cost us £15k to deliver",
+  "I've been marked as 'in a meeting' on Teams for 4 hours but I'm actually at the gym",
+  "I submitted my timesheet claiming I worked 60 hours last week but 30 of those were watching Netflix",
+  "I missed half a day for a 'doctor's appointment' that was actually a job interview",
+  "I've been expensing my daily Pret lunches as 'client entertainment' for three months"
+];
+
+/**
+ * Get a random placeholder example from the PLACEHOLDER_EXAMPLES array
+ */
+export function getRandomPlaceholder(): string {
+  const randomIndex = Math.floor(Math.random() * PLACEHOLDER_EXAMPLES.length);
+  return PLACEHOLDER_EXAMPLES[randomIndex];
 }

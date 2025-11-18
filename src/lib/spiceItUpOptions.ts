@@ -19,49 +19,61 @@ export const ALWAYS_AVAILABLE_ELEMENTS: NarrativeElement[] = [
     id: 'injured-fox',
     label: 'Injured Fox',
     emoji: '🦊',
-    promptText: 'an injured fox with a bandaged paw'
+    promptText: 'an injured fox with a bandaged paw (Journey Further mascot)'
   },
   {
-    id: 'suspicious-duck',
-    label: 'Suspicious Duck',
-    emoji: '🦆',
-    promptText: 'a suspicious-looking duck'
-  },
-  {
-    id: 'shifty-dog',
-    label: 'Dog with Shifty Eyes',
+    id: 'office-dog',
+    label: 'Office Dog',
     emoji: '🐕',
-    promptText: 'a dog with shifty, suspicious eyes'
+    promptText: 'a company office dog causing chaos or getting involved'
   },
   {
-    id: 'victorian-gentleman',
-    label: 'Victorian Gentleman',
+    id: 'duck-clipboard',
+    label: 'Duck With A Clipboard',
+    emoji: '🦆',
+    promptText: 'a suspicious duck holding a clipboard, taking notes and observing critically'
+  },
+  {
+    id: 'client-lunch-leftovers',
+    label: 'Client Lunch Leftovers',
+    emoji: '🍱',
+    promptText: 'leftover food from a client lunch or meeting catering gone wrong'
+  },
+  {
+    id: 'broken-coffee-machine',
+    label: 'Broken Coffee Machine',
+    emoji: '☕',
+    promptText: 'a malfunctioning office coffee machine at the worst possible moment'
+  },
+  {
+    id: 'high-vis-person',
+    label: 'Mysterious Person in High-Vis',
+    emoji: '🦺',
+    promptText: 'a mysterious construction worker or contractor in high-visibility clothing appearing at impossible moments'
+  },
+  {
+    id: 'yorkshire-pudding',
+    label: 'A Yorkshire Pudding',
+    emoji: '🥔',
+    promptText: 'a Yorkshire pudding that has achieved consciousness or come to life'
+  },
+  {
+    id: 'transatlantic-flight',
+    label: 'Transatlantic Flight',
+    emoji: '✈️',
+    promptText: 'transatlantic flight chaos, international travel disasters, or timezone confusion'
+  },
+  {
+    id: 'working-fax-machine',
+    label: 'A Still Working Fax Machine',
+    emoji: '📠',
+    promptText: 'an ancient fax machine that mysteriously still works, sending or receiving something important'
+  },
+  {
+    id: 'time-travelling-victorian',
+    label: 'A Time-Travelling Victorian Gentleman',
     emoji: '🎩',
-    promptText: 'a Victorian gentleman in a top hat and monocle'
-  },
-  {
-    id: 'alien-involvement',
-    label: 'Alien Involvement',
-    emoji: '👽',
-    promptText: 'alien presence or extraterrestrial technology'
-  },
-  {
-    id: 'freak-weather',
-    label: 'Freak Weather',
-    emoji: '🌧️',
-    promptText: 'impossibly specific freak weather event (sideways hail, localized tornado, etc.)'
-  },
-  {
-    id: 'robot-malfunction',
-    label: 'Robot Malfunction',
-    emoji: '🤖',
-    promptText: 'a malfunctioning robot or AI system'
-  },
-  {
-    id: 'time-traveler',
-    label: 'Time Traveler',
-    emoji: '⏰',
-    promptText: 'a confused time traveler from the past or future'
+    promptText: 'a confused Victorian gentleman from the past, complete with top hat and monocle, bewildered by modern technology'
   }
 ];
 
@@ -74,54 +86,124 @@ export interface LimitedTimeElement extends NarrativeElement {
 
 export const LIMITED_TIME_ELEMENTS: LimitedTimeElement[] = [
   {
-    id: 'cupid-revenge',
-    label: "Cupid's Revenge",
+    id: 'new-year-new-me',
+    label: 'New Year, New Me',
+    emoji: '💪',
+    promptText: 'New Year\'s resolutions failing spectacularly, self-improvement attempts going wrong, or January motivation already abandoned',
+    startMonth: 1,
+    endMonth: 1,
+    startDay: 1,
+    endDay: 31
+  },
+  {
+    id: 'valentines-day',
+    label: 'Valentine\'s Day',
     emoji: '💘',
-    promptText: 'Cupid or Valentine\'s Day-related romantic mishap',
+    promptText: 'Valentine\'s Day romantic mishaps, cupid causing chaos, or love-related disasters',
     startMonth: 2,
     endMonth: 2,
     startDay: 1,
-    endDay: 14
+    endDay: 29 // Handles leap years automatically
+  },
+  {
+    id: 'st-patricks-day',
+    label: 'St. Patrick\'s Day',
+    emoji: '☘️',
+    promptText: 'St. Patrick\'s Day celebrations, Guinness-fueled chaos, Irish themes, or leprechauns causing mischief',
+    startMonth: 3,
+    endMonth: 3,
+    startDay: 1,
+    endDay: 31
   },
   {
     id: 'easter-bunny',
-    label: 'Easter Bunny Incident',
+    label: 'Easter Bunny',
     emoji: '🐰',
-    promptText: 'Easter Bunny causing chaos or mischief',
-    startMonth: 3,
+    promptText: 'Easter Bunny causing chaos, chocolate-related disasters, or egg hunt mishaps',
+    startMonth: 4,
     endMonth: 4,
-    startDay: 15,
+    startDay: 1,
     endDay: 30
   },
   {
-    id: 'fireworks-disaster',
-    label: 'Fireworks Disaster',
+    id: 'cinco-de-mayo',
+    label: 'Cinco de Mayo',
+    emoji: '🌮',
+    promptText: 'Cinco de Mayo celebrations, Mexican food disasters, mariachi bands, or tequila-related incidents',
+    startMonth: 5,
+    endMonth: 5,
+    startDay: 1,
+    endDay: 31
+  },
+  {
+    id: 'summer-solstice',
+    label: 'Summer Solstice',
+    emoji: '☀️',
+    promptText: 'Summer solstice phenomena, longest day of the year chaos, or midsummer madness',
+    startMonth: 6,
+    endMonth: 6,
+    startDay: 1,
+    endDay: 30
+  },
+  {
+    id: 'independence-day',
+    label: 'Independence Day',
     emoji: '🎆',
-    promptText: 'explosive fireworks-related incident',
+    promptText: '4th of July celebrations, fireworks disasters, American patriotism gone wild, or BBQ mishaps',
     startMonth: 7,
     endMonth: 7,
     startDay: 1,
-    endDay: 14
+    endDay: 31
   },
   {
-    id: 'halloween-chaos',
-    label: 'Halloween Chaos',
+    id: 'school-holidays',
+    label: 'School Holidays',
+    emoji: '🏖️',
+    promptText: 'summer school holiday chaos, vacation disasters, kids off school causing mayhem, or family holiday mishaps',
+    startMonth: 8,
+    endMonth: 8,
+    startDay: 1,
+    endDay: 31
+  },
+  {
+    id: 'oktoberfest',
+    label: 'Oktoberfest',
+    emoji: '🍺',
+    promptText: 'Oktoberfest celebrations, beer festival chaos, German themes, or pretzel-related incidents',
+    startMonth: 9,
+    endMonth: 9,
+    startDay: 1,
+    endDay: 30
+  },
+  {
+    id: 'halloween',
+    label: 'Halloween',
     emoji: '🎃',
-    promptText: 'spooky Halloween-related supernatural event',
+    promptText: 'Halloween spookiness, supernatural events, costume mishaps, or trick-or-treat disasters',
     startMonth: 10,
     endMonth: 10,
     startDay: 1,
     endDay: 31
   },
   {
-    id: 'santa-fault',
-    label: "Santa's Fault",
+    id: 'black-friday',
+    label: 'Black Friday',
+    emoji: '🛒',
+    promptText: 'Black Friday shopping chaos, retail madness, e-commerce crashes, or deal-hunting disasters',
+    startMonth: 11,
+    endMonth: 11,
+    startDay: 1,
+    endDay: 30
+  },
+  {
+    id: 'christmas',
+    label: 'Christmas',
     emoji: '🎅',
-    promptText: 'Santa Claus or Christmas elves causing problems',
+    promptText: 'Christmas chaos, Santa Claus mishaps, festive disasters, or elf-related problems',
     startMonth: 12,
     endMonth: 12,
     startDay: 1,
-    endDay: 25
+    endDay: 31
   }
 ];
 
@@ -160,10 +242,11 @@ export type ComedyStyle =
   | 'observational'
   | 'deadpan'
   | 'hyperbolic'
-  | 'self-deprecating'
+  | 'passive-aggressive'
   | 'ironic'
   | 'meta'
-  | 'paranoid';
+  | 'paranoid'
+  | 'corporate-jargon';
 
 export interface ComedyStyleOption {
   id: ComedyStyle;
@@ -177,10 +260,11 @@ export const COMEDY_STYLES: ComedyStyleOption[] = [
   { id: 'observational', label: 'Observational', emoji: '🔍' },
   { id: 'deadpan', label: 'Deadpan', emoji: '😐' },
   { id: 'hyperbolic', label: 'Hyperbolic', emoji: '🚀' },
-  { id: 'self-deprecating', label: 'Self-Deprecating', emoji: '🤦' },
+  { id: 'passive-aggressive', label: 'Passive-Aggressive', emoji: '😤' },
   { id: 'ironic', label: 'Ironic', emoji: '🔄' },
   { id: 'meta', label: 'Meta', emoji: '🎭' },
-  { id: 'paranoid', label: 'Paranoid', emoji: '👁️' }
+  { id: 'paranoid', label: 'Paranoid', emoji: '👁️' },
+  { id: 'corporate-jargon', label: 'Corporate Jargon', emoji: '💼' }
 ];
 
 // ============================================================================
