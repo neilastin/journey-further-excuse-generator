@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getRobinPersona } from '../src/lib/personas/robin-skidmore';
+import { getRobinPersona } from '../src/lib/personas/robin-skidmore.js';
 
 /**
  * IMPORTANT NOTE ABOUT PERSONA IMPORT:
