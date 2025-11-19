@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import type { ExcusesResponse, GenerateImageResponse, CustomExcuseOptions } from '@/types';
 import { getRandomVariation, type TaglineVariation } from '@/lib/taglineVariations';
 import AnimatedBackground from '@/components/AnimatedBackground';
@@ -11,8 +11,8 @@ import PhotoEvidence from '@/components/PhotoEvidence';
 import Footer from '@/components/Footer';
 
 function App() {
-  // Tagline variation (selected on mount)
-  const [variation, setVariation] = useState<TaglineVariation>(() => getRandomVariation());
+  // Tagline variation (selected on mount via lazy initializer - no need for useEffect)
+  const [variation] = useState<TaglineVariation>(() => getRandomVariation());
 
   // Loading states
   const [isGeneratingExcuses, setIsGeneratingExcuses] = useState(false);
@@ -38,12 +38,7 @@ function App() {
   // Ref for scroll target
   const formRef = useRef<HTMLDivElement>(null);
 
-  // Select random variation on mount
-  useEffect(() => {
-    setVariation(getRandomVariation());
-  }, []);
-
-  const generateExcuses = async (data: {
+  const generateExcuses = useCallback(async (data: {
     scenario: string;
     audience: string;
     customOptions?: CustomExcuseOptions;
@@ -84,9 +79,9 @@ function App() {
     } finally {
       setIsGeneratingExcuses(false);
     }
-  };
+  }, []);
 
-  const generateImage = async (
+  const generateImage = useCallback(async (
     excuseType: 'excuse1' | 'excuse2',
     headshotBase64?: string,
     headshotMimeType?: 'image/jpeg' | 'image/png',
@@ -133,11 +128,11 @@ function App() {
     } finally {
       setIsGeneratingImage(false);
     }
-  };
+  }, [excuses, originalSituation]);
 
-  const handleTabChange = (excuseType: 'excuse1' | 'excuse2') => {
+  const handleTabChange = useCallback((excuseType: 'excuse1' | 'excuse2') => {
     setSelectedExcuseTab(excuseType);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

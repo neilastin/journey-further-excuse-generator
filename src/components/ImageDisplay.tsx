@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image as ImageIcon, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -45,7 +45,7 @@ const loadingMessages = [
   "Assembling your defence exhibit...",
 ];
 
-export default function ImageDisplay({
+function ImageDisplay({
   imageUrl,
   isLoading,
   accentColor,
@@ -72,11 +72,15 @@ export default function ImageDisplay({
     return () => clearInterval(interval);
   }, [isLoading]);
 
-  const handleImageClick = () => {
+  const handleImageClick = useCallback(() => {
     if (imageUrl && !isLoading) {
       setIsModalOpen(true);
     }
-  };
+  }, [imageUrl, isLoading]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
 
   return (
     <div
@@ -223,10 +227,12 @@ export default function ImageDisplay({
         <ImageModal
           isOpen={isModalOpen}
           imageUrl={imageUrl}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseModal}
           excuseType={excuseType}
         />
       )}
     </div>
   );
 }
+
+export default memo(ImageDisplay);

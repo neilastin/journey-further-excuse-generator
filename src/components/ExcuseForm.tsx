@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, type FormEvent, type ChangeEvent } from 'react';
+import { useState, useEffect, useMemo, useCallback, type FormEvent, type ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AUDIENCE_OPTIONS, LOADING_MESSAGES, LOADING_MESSAGE_INTERVAL, getRandomPlaceholder } from '@/lib/constants';
 import type { CustomExcuseOptions } from '@/types';
@@ -48,7 +48,7 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
     };
   }, [isLoading]);
 
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
 
     if (!scenario.trim()) {
@@ -63,9 +63,9 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  };
+  }, [scenario, audience]);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -76,26 +76,26 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
       scenario: scenario.trim(),
       audience,
     });
-  };
+  }, [validateForm, onSubmit, scenario, audience]);
 
-  const handleScenarioChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleScenarioChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
     setScenario(e.target.value);
     if (formErrors.scenario) {
       setFormErrors((prev) => ({ ...prev, scenario: undefined }));
     }
-  };
+  }, [formErrors.scenario]);
 
-  const handleAudienceChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleAudienceChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
     setAudience(e.target.value);
     if (formErrors.audience) {
       setFormErrors((prev) => ({ ...prev, audience: undefined }));
     }
-  };
+  }, [formErrors.audience]);
 
-  const openCustomiseModal = () => setIsCustomiseOpen(true);
-  const closeCustomiseModal = () => setIsCustomiseOpen(false);
+  const openCustomiseModal = useCallback(() => setIsCustomiseOpen(true), []);
+  const closeCustomiseModal = useCallback(() => setIsCustomiseOpen(false), []);
 
-  const handleCustomiseGenerate = (options: {
+  const handleCustomiseGenerate = useCallback((options: {
     style: string;
     narrativeElements: string[];
     excuseFocus: string;
@@ -122,7 +122,7 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
 
     // Modal stays open - parent will handle closing after generation completes
     // (Modal shows loading state internally)
-  };
+  }, [validateForm, closeCustomiseModal, onSubmit, scenario, audience]);
 
   const isFormValid = scenario.trim().length >= 10 && audience;
 

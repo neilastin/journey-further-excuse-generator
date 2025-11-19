@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, type KeyboardEvent } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import {
   COMEDY_STYLES,
   ALWAYS_AVAILABLE_ELEMENTS,
@@ -95,17 +95,17 @@ export default function CustomiseModal({
   }, [isOpen, isLoading, onClose]);
 
   // Handle backdrop click
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && !isLoading) {
       onClose();
     }
-  };
+  }, [isLoading, onClose]);
 
   // Ref to scrollable container for scroll position preservation
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Handle narrative element toggle
-  const handleElementToggle = (elementId: string) => {
+  const handleElementToggle = useCallback((elementId: string) => {
     if (isLoading) return;
 
     // Save scroll position before state update
@@ -129,10 +129,10 @@ export default function CustomiseModal({
         scrollContainerRef.current.scrollTop = scrollTop;
       }
     });
-  };
+  }, [isLoading]);
 
   // Handle form submission
-  const handleGenerate = () => {
+  const handleGenerate = useCallback(() => {
     if (isLoading) return;
 
     onGenerate({
@@ -141,15 +141,15 @@ export default function CustomiseModal({
       excuseFocus: selectedFocus,
       aiModel: selectedModel,
     });
-  };
+  }, [isLoading, onGenerate, selectedStyle, selectedElements, selectedFocus, selectedModel]);
 
   // Check if element checkbox should be disabled
-  const isElementDisabled = (elementId: string): boolean => {
+  const isElementDisabled = useCallback((elementId: string): boolean => {
     return (
       isLoading ||
       (!selectedElements.includes(elementId) && selectedElements.length >= MAX_NARRATIVE_ELEMENTS)
     );
-  };
+  }, [isLoading, selectedElements]);
 
   if (!isOpen) return null;
 
@@ -418,17 +418,7 @@ export default function CustomiseModal({
                       )}
                     >
                       {selectedElements.includes(element.id) && (
-                        <svg
-                          className="w-2.5 h-2.5 text-background"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="3"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
+                        <Check className="w-2.5 h-2.5 text-background" strokeWidth={3} />
                       )}
                     </div>
                     <span className="text-2xl" aria-hidden="true">
@@ -482,18 +472,8 @@ export default function CustomiseModal({
                         )}
                       >
                         {selectedElements.includes(element.id) && (
-                          <svg
-                            className="w-2.5 h-2.5 text-background"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="3"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
+                        <Check className="w-2.5 h-2.5 text-background" strokeWidth={3} />
+                      )}
                       </div>
                       <span className="text-2xl" aria-hidden="true">
                         {element.emoji}
@@ -514,7 +494,7 @@ export default function CustomiseModal({
               disabled={isLoading}
               whileHover={!isLoading ? { scale: 1.02, boxShadow: '0 0 30px rgba(0, 255, 136, 0.4)' } : {}}
               whileTap={!isLoading ? { scale: 0.98 } : {}}
-              onKeyDown={(e: KeyboardEvent<HTMLButtonElement>) => {
+              onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
                 if ((e.key === 'Enter' || e.key === ' ') && !isLoading) {
                   e.preventDefault();
                   handleGenerate();

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -32,10 +32,10 @@ const accentColorClasses = {
   },
 };
 
-export default function ExcuseCard({ title, text, accentColor, index }: ExcuseCardProps) {
+function ExcuseCard({ title, text, accentColor, index }: ExcuseCardProps) {
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text);
       setIsCopied(true);
@@ -46,7 +46,7 @@ export default function ExcuseCard({ title, text, accentColor, index }: ExcuseCa
     } catch (err) {
       console.error('Failed to copy text:', err);
     }
-  };
+  }, [text]);
 
   const colorClasses = accentColorClasses[accentColor];
 
@@ -113,3 +113,5 @@ export default function ExcuseCard({ title, text, accentColor, index }: ExcuseCa
     </motion.div>
   );
 }
+
+export default memo(ExcuseCard);

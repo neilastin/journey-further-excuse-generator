@@ -1,122 +1,63 @@
-# Test Suite - Not My Fault
+# Smoke Test Suite
 
-## Overview
-
-This directory contains the smoke test suite for the "Not My Fault" excuse generator application.
-
-## Test Philosophy
-
-**Quality > Quantity:** This project uses a minimal smoke test suite (5 tests) rather than comprehensive testing. This decision was made after discovering that extensive test suites (50+ tests) were too brittle and didn't match the app's simplicity.
-
-**Key Principle:** Test that the app works, not every edge case.
-
-## Files
-
-### `smoke.spec.ts`
-Main test file containing 5 core tests:
-1. App loads successfully
-2. Excuse generation (Claude API integration)
-3. Tab switching between excuse types
-4. Form validation
-5. Image generation (Gemini API integration)
+5 critical tests verifying core functionality. Designed to be simple, reliable, and fast.
 
 **Runtime:** ~8-10 minutes (desktop + mobile)
 
-### `SMOKE-TEST-GUIDE.md`
-Complete testing documentation including:
-- How to run tests
-- What each test does
-- Troubleshooting tips
-- When to run tests
-- FAQ
+## Prerequisites
 
-## Quick Start
+1. API keys in `.env.local` (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`)
+2. Dev server running: `npm run dev`
 
-**Run tests (headless):**
+## Commands
+
 ```bash
-npm run test:smoke
+npm run test:smoke         # Run tests (headless)
+npm run test:smoke:headed  # Watch tests in browser
+npm run test:smoke:debug   # Step through tests
+npm run test:report        # View HTML report
 ```
 
-**Run tests (headed - watch in browser):**
+Run single test:
 ```bash
-npm run test:smoke:headed
+npx playwright test -g "should generate excuses"
 ```
 
-**Debug mode:**
-```bash
-npm run test:smoke:debug
-```
+## Tests
 
-**View test report:**
-```bash
-npm run test:report
-```
+1. **App Loads** - Header, hero, form, footer visible
+2. **Excuse Generation** - Full flow with Claude API (90s timeout)
+3. **Tab Switching** - Switch between "Believable" and "Risky!" tabs
+4. **Form Validation** - Button enables only with valid input (10+ chars)
+5. **Image Generation** - Gemini API flow (lenient - passes with error message)
 
 ## Configuration
 
-Tests are configured in `playwright.config.ts`:
-- **Timeout:** 90s per test (allows for API latency)
-- **Execution:** Sequential (1 worker) to avoid API rate limits
-- **Devices:** Desktop (1920×1080) + Mobile (Pixel 5 375×667)
-- **Failure handling:** Screenshots + videos saved to `test-results/`
+- **Devices:** Desktop (1920x1080) + Mobile (Pixel 5)
+- **Execution:** Sequential (1 worker) to avoid rate limits
+- **Timeout:** 90s per test
+- **On failure:** Screenshots + videos in `test-results/`
 
-## Prerequisites
+## Troubleshooting
 
-1. **Environment variables** in `.env.local`:
-   - `ANTHROPIC_API_KEY` (for excuse generation)
-   - `GEMINI_API_KEY` (for image generation)
+**Tests timeout:** Check API keys, dev server running, rate limits
 
-2. **Dev server running:**
-   ```bash
-   npm run dev
-   ```
+**Button disabled:** Form needs 10+ character scenario
 
-## Helper Functions
+**Element not found:** UI changed, update selectors in `smoke.spec.ts`
 
-### `generateExcuses(page)`
-Prerequisite helper used by tests 3-5:
-- Navigates to homepage
-- Fills scenario textarea
-- Selects audience
-- Clicks "Generate Excuses"
-- Waits for excuse tabs to appear
+**Port in use:**
+```bash
+# Windows
+netstat -ano | findstr :3001
+taskkill /F /PID <PID>
 
-## Important Notes
-
-- **On-demand only:** Tests should NOT run automatically in CI/CD (uses API quota, requires keys)
-- **API dependency:** Tests require valid API keys and working APIs
-- **Sequential execution:** Running tests in parallel will hit API rate limits
-- **Lenient image test:** Test 5 passes even if image generation fails (allows for API quota issues)
-
-## Test Coverage
-
-✅ Core user flows tested:
-- App loads with all UI elements
-- Excuse generation with Claude API
-- Tab navigation between excuse types
-- Form validation (10+ character requirement)
-- Image generation with Gemini API
-
-✅ Cross-device testing:
-- Desktop viewport (1920×1080)
-- Mobile viewport (Pixel 5 375×667)
+# Mac/Linux
+lsof -ti:3001 | xargs kill -9
+```
 
 ## When to Run
 
-**Do run:**
-- Before deploying to production
-- After major feature changes
-- After API integration changes
+**Do run:** Before production deploy, after major changes
 
-**Don't run:**
-- On every commit (too slow)
-- In automated CI/CD (requires API keys)
-
-## More Information
-
-See `SMOKE-TEST-GUIDE.md` for comprehensive documentation.
-
----
-
-**Test Suite Status:** ✅ Complete (Phase 7)
-**Last Updated:** 2025-10-29
+**Don't run:** Every commit (slow), in CI/CD (requires API keys)

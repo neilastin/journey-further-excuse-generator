@@ -105,6 +105,21 @@ function getClientIp(req: VercelRequest): string {
 }
 
 // ============================================================================
+// VALIDATION CONSTANTS
+// ============================================================================
+
+const VALID_AUDIENCE_OPTIONS = [
+  'A Colleague',
+  'Your Manager',
+  'A Direct Report',
+  'The Client',
+  'HR',
+  'Finance',
+  'A Random Stranger On LinkedIn',
+  'Robin Skidmore'
+];
+
+// ============================================================================
 // TYPES
 // ============================================================================
 
@@ -673,6 +688,13 @@ export default async function handler(
       });
     }
 
+    // Validate audience against whitelist
+    if (!VALID_AUDIENCE_OPTIONS.includes(audience)) {
+      return res.status(400).json({
+        error: 'Invalid audience option.'
+      });
+    }
+
     if (scenario.length > 1000) {
       return res.status(400).json({
         error: 'Scenario is too long. Please limit to 1000 characters.'
@@ -855,7 +877,7 @@ DO NOT include any text outside the JSON object. DO NOT use markdown code blocks
       if (aiModel === 'gemini') {
         // Use Gemini API
         console.log('Using Gemini API for excuse generation');
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
         apiResponse = await fetch(geminiUrl, {
           method: 'POST',
           headers: {
@@ -872,7 +894,7 @@ DO NOT include any text outside the JSON object. DO NOT use markdown code blocks
               }
             ],
             generationConfig: {
-              maxOutputTokens: 2000,
+              maxOutputTokens: 4096,
             }
           }),
           signal: controller.signal

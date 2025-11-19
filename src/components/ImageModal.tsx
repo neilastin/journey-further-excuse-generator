@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ImageModalProps {
@@ -18,7 +18,7 @@ export default function ImageModal({
 }: ImageModalProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const handleDownload = () => {
+  const handleDownload = useCallback(() => {
     if (!imageUrl || isDownloading) return;
 
     setIsDownloading(true);
@@ -36,14 +36,14 @@ export default function ImageModal({
       setIsDownloading(false);
       onClose();
     }, 800);
-  };
+  }, [imageUrl, isDownloading, excuseType, onClose]);
 
   // Close on ESC key
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       onClose();
     }
-  };
+  }, [onClose]);
 
   return (
     <AnimatePresence>

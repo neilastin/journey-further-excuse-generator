@@ -116,8 +116,7 @@ const server = createServer(async (req, res) => {
         res.statusCode = 500;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({
-          error: 'Internal server error',
-          message: error.message
+          error: 'Internal server error'
         }));
       }
     });

@@ -116,6 +116,12 @@ interface ImageResponse {
   imageUrl: string;
 }
 
+// ============================================================================
+// VALIDATION CONSTANTS
+// ============================================================================
+
+const VALID_ASPECT_RATIOS = ['16:9', '4:5', '9:16', '1:1'];
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -185,6 +191,13 @@ export default async function handler(
     if (excuseText.length > 2000) {
       return res.status(400).json({
         error: 'Excuse text is too long. Please limit to 2000 characters.'
+      });
+    }
+
+    // Validate aspect ratio against whitelist
+    if (aspectRatio && !VALID_ASPECT_RATIOS.includes(aspectRatio)) {
+      return res.status(400).json({
+        error: 'Invalid aspect ratio. Allowed values: 16:9, 4:5, 9:16, 1:1'
       });
     }
 

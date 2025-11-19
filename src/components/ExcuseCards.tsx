@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import type { ExcusesResponse } from '@/types';
 import ExcuseCard from './ExcuseCard';
@@ -33,7 +33,7 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
     };
   }, [excuses]);
 
-  const handleTabChange = (excuseType: ExcuseType) => {
+  const handleTabChange = useCallback((excuseType: ExcuseType) => {
     setActiveTab(excuseType);
 
     // Map UI tab type to API excuse type and notify parent
@@ -43,16 +43,17 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
     };
 
     onTabChange?.(excuseTypeMap[excuseType]);
-  };
+  }, [onTabChange]);
+
+  // Memoize tabs array to prevent recreation on each render
+  const tabs = useMemo(() => [
+    { type: 'believable' as const, label: 'Believable' },
+    { type: 'risky' as const, label: 'Risky!', emoji: '🔥💥' },
+  ], []);
 
   if (!isVisible || !excuseData) {
     return null;
   }
-
-  const tabs: { type: ExcuseType; label: string; emoji?: string }[] = [
-    { type: 'believable', label: 'Believable' },
-    { type: 'risky', label: 'Risky!', emoji: '🔥💥' },
-  ];
 
   const activeExcuse = excuseData[activeTab];
 

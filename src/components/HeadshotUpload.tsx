@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
+import { useRef, useState, useCallback, type ChangeEvent, type DragEvent } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, X, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ export default function HeadshotUpload({
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fileToBase64 = (file: File): Promise<string> => {
+  const fileToBase64 = useCallback((file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -36,9 +36,9 @@ export default function HeadshotUpload({
       };
       reader.onerror = (error) => reject(error);
     });
-  };
+  }, []);
 
-  const validateFile = (file: File): string | null => {
+  const validateFile = useCallback((file: File): string | null => {
     if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
       return 'Please upload a JPG or PNG file';
     }
@@ -48,9 +48,9 @@ export default function HeadshotUpload({
     }
 
     return null;
-  };
+  }, []);
 
-  const handleFile = async (file: File) => {
+  const handleFile = useCallback(async (file: File) => {
     setError(null);
 
     const validationError = validateFile(file);
@@ -73,28 +73,28 @@ export default function HeadshotUpload({
       setError('Failed to process image. Please try again.');
       console.error('Error processing file:', err);
     }
-  };
+  }, [validateFile, fileToBase64, onUpload]);
 
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       handleFile(file);
     }
-  };
+  }, [handleFile]);
 
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!disabled) {
       setIsDragging(true);
     }
-  };
+  }, [disabled]);
 
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-  };
+  }, []);
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+  const handleDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
 
@@ -104,22 +104,22 @@ export default function HeadshotUpload({
     if (file) {
       handleFile(file);
     }
-  };
+  }, [disabled, handleFile]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!disabled && fileInputRef.current) {
       fileInputRef.current.click();
     }
-  };
+  }, [disabled]);
 
-  const handleRemove = () => {
+  const handleRemove = useCallback(() => {
     setPreviewUrl(null);
     setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
     onRemove();
-  };
+  }, [onRemove]);
 
   return (
     <div className="space-y-4">

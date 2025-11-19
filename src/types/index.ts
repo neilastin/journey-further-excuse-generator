@@ -91,8 +91,3 @@ export interface LoadingAnimationProps {
   messages: string[];
   interval?: number; // milliseconds between message changes
 }
-
-export interface PhotoEvidenceProps {
-  excuseText: string;
-  onImageGenerated: (imageUrl: string) => void;
-}

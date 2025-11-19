@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import HeadshotUpload from './HeadshotUpload';
 import ImageDisplay from './ImageDisplay';
@@ -57,22 +57,22 @@ export default function PhotoEvidence({
   const [lusciousLocksUnlocked, setLusciousLocksUnlocked] = useState(false);
   const [lusciousLocksEnabled, setLusciousLocksEnabled] = useState(false);
 
-  const handleUpload = (file: File, base64: string, mimeType: 'image/jpeg' | 'image/png') => {
+  const handleUpload = useCallback((file: File, base64: string, mimeType: 'image/jpeg' | 'image/png') => {
     setHeadshot({ file, base64, mimeType });
-  };
+  }, []);
 
-  const handleRemove = () => {
+  const handleRemove = useCallback(() => {
     setHeadshot(null);
-  };
+  }, []);
 
-  const handleAspectRatioSelect = (value: string) => {
+  const handleAspectRatioSelect = useCallback((value: string) => {
     setAspectRatio(value);
 
     // Show LinkedIn warning when selecting 4:5
     if (value === '4:5') {
       setShowLinkedInWarning(true);
     }
-  };
+  }, []);
 
   // Auto-hide LinkedIn warning after 3 seconds
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function PhotoEvidence({
     }
   }, [showNoPhotoWarning]);
 
-  const handleOutfitToggle = () => {
+  const handleOutfitToggle = useCallback(() => {
     const now = Date.now();
 
     // Track rapid toggling for easter egg (within 500ms between clicks)
@@ -117,15 +117,15 @@ export default function PhotoEvidence({
       return;
     }
     setKeepSameClothes(!keepSameClothes);
-  };
+  }, [lastToggleTime, outfitToggleCount, lusciousLocksUnlocked, headshot, keepSameClothes]);
 
-  const handleGenerate = () => {
+  const handleGenerate = useCallback(() => {
     if (headshot) {
       onGenerate(headshot.base64, headshot.mimeType, keepSameClothes, aspectRatio, lusciousLocksEnabled);
     } else {
       onGenerate(undefined, undefined, undefined, aspectRatio, lusciousLocksEnabled);
     }
-  };
+  }, [headshot, onGenerate, keepSameClothes, aspectRatio, lusciousLocksEnabled]);
 
   const isButtonDisabled = isGenerating || !excuseText;
   const excuseLabel = excuseTypeLabels[excuseType];
