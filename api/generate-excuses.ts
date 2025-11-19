@@ -118,6 +118,7 @@ interface CustomExcuseOptions {
   style?: string; // Comedy style ID or "surprise-me"
   narrativeElements?: string[]; // Array of element IDs (max 3)
   excuseFocus?: string; // Focus ID or "let-ai-decide"
+  aiModel?: 'claude' | 'gemini'; // AI model to use for generation
 }
 
 interface ExcuseItem {
@@ -630,6 +631,9 @@ export default async function handler(
   try {
     const { scenario, audience, customOptions } = req.body as RequestBody;
 
+    // Determine which model to use early (default to Claude)
+    const aiModel = customOptions?.aiModel || 'claude';
+
     // Log request received
     console.log(JSON.stringify({
       timestamp: new Date().toISOString(),
@@ -642,7 +646,8 @@ export default async function handler(
         hasCustomOptions: !!customOptions,
         customStyle: customOptions?.style,
         narrativeElementsCount: customOptions?.narrativeElements?.length || 0,
-        excuseFocus: customOptions?.excuseFocus
+        excuseFocus: customOptions?.excuseFocus,
+        aiModel: aiModel
       }
     }));
 
@@ -705,14 +710,24 @@ export default async function handler(
     }
 
     // ========================================================================
-    // API KEY CHECK
+    // API KEY CHECK & MODEL SELECTION
     // ========================================================================
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error('ANTHROPIC_API_KEY is not configured');
-      return res.status(500).json({
-        error: 'Server configuration error. Please contact support.'
-      });
+    // Check for required API key based on model selection
+    if (aiModel === 'gemini') {
+      if (!process.env.GEMINI_API_KEY) {
+        console.error('GEMINI_API_KEY is not configured');
+        return res.status(500).json({
+          error: 'Gemini API is not configured. Please try with Claude model.'
+        });
+      }
+    } else {
+      if (!process.env.ANTHROPIC_API_KEY) {
+        console.error('ANTHROPIC_API_KEY is not configured');
+        return res.status(500).json({
+          error: 'Server configuration error. Please contact support.'
+        });
+      }
     }
 
     // ========================================================================
@@ -827,38 +842,70 @@ Return your response as a JSON object with this EXACT structure:
 DO NOT include any text outside the JSON object. DO NOT use markdown code blocks. Return ONLY the raw JSON.`;
 
     // ========================================================================
-    // CALL CLAUDE API
+    // CALL AI API (CLAUDE OR GEMINI)
     // ========================================================================
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
     try {
-      const apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-5-20250929',
-          max_tokens: 2000,
-          messages: [
-            {
-              role: 'user',
-              content: prompt
+      let apiResponse;
+      let excusesText: string;
+
+      if (aiModel === 'gemini') {
+        // Use Gemini API
+        console.log('Using Gemini API for excuse generation');
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        apiResponse = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: prompt
+                  }
+                ]
+              }
+            ],
+            generationConfig: {
+              maxOutputTokens: 2000,
             }
-          ]
-        }),
-        signal: controller.signal
-      });
+          }),
+          signal: controller.signal
+        });
+      } else {
+        // Use Claude API (default)
+        console.log('Using Claude API for excuse generation');
+        apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.ANTHROPIC_API_KEY,
+            'anthropic-version': '2023-06-01'
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-5-20250929',
+            max_tokens: 2000,
+            messages: [
+              {
+                role: 'user',
+                content: prompt
+              }
+            ]
+          }),
+          signal: controller.signal
+        });
+      }
 
       clearTimeout(timeoutId);
 
       if (!apiResponse.ok) {
         const errorData = await apiResponse.text();
-        console.error('Claude API error:', {
+        console.error(`${aiModel === 'gemini' ? 'Gemini' : 'Claude'} API error:`, {
           status: apiResponse.status,
           errorPreview: errorData.substring(0, 200),
           timestamp: new Date().toISOString()
@@ -870,8 +917,14 @@ DO NOT include any text outside the JSON object. DO NOT use markdown code blocks
 
       const data = await apiResponse.json();
 
-      // Parse Claude's JSON response
-      const excusesText = data.content[0].text;
+      // Parse API response based on model
+      if (aiModel === 'gemini') {
+        // Gemini response format
+        excusesText = data.candidates[0].content.parts[0].text;
+      } else {
+        // Claude response format
+        excusesText = data.content[0].text;
+      }
 
       // Handle potential markdown code blocks
       const cleanedText = excusesText

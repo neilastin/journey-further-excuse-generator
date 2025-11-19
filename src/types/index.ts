@@ -53,6 +53,7 @@ export interface CustomExcuseOptions {
   style?: string; // If specified, use this style instead of random
   narrativeElements?: string[]; // IDs of selected narrative elements (max 3)
   excuseFocus?: string; // ID of selected excuse focus
+  aiModel?: 'claude' | 'gemini'; // AI model to use for generation
 }
 
 export interface GenerateExcusesRequest {

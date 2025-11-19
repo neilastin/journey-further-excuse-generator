@@ -21,6 +21,7 @@ interface CustomiseModalProps {
     style: string;
     narrativeElements: string[];
     excuseFocus: string;
+    aiModel?: 'claude' | 'gemini';
   }) => void;
   isLoading: boolean;
 }
@@ -35,6 +36,7 @@ export default function CustomiseModal({
   const [selectedStyle, setSelectedStyle] = useState<ComedyStyle>('surprise-me');
   const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [selectedFocus, setSelectedFocus] = useState<ExcuseFocus>('let-ai-decide');
+  const [selectedModel, setSelectedModel] = useState<'claude' | 'gemini'>('claude');
 
   // Limited time elements (fetched once on mount)
   const [limitedTimeElements, setLimitedTimeElements] = useState<NarrativeElement[]>([]);
@@ -137,6 +139,7 @@ export default function CustomiseModal({
       style: selectedStyle,
       narrativeElements: selectedElements,
       excuseFocus: selectedFocus,
+      aiModel: selectedModel,
     });
   };
 
@@ -288,6 +291,78 @@ export default function CustomiseModal({
                     </label>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* AI Model Selection */}
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-text-primary">
+                AI Model <span className="text-text-muted text-xs font-normal">(pick one)</span>
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <label
+                  className={cn(
+                    'flex items-center gap-2.5 p-3 rounded-lg cursor-pointer transition-all',
+                    'hover:bg-background-input',
+                    selectedModel === 'claude' && 'bg-background-input ring-2 ring-accent-green',
+                    isLoading && 'opacity-50 cursor-not-allowed'
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="ai-model"
+                    value="claude"
+                    checked={selectedModel === 'claude'}
+                    onChange={(e) => setSelectedModel(e.target.value as 'claude' | 'gemini')}
+                    disabled={isLoading}
+                    className="sr-only"
+                  />
+                  <div
+                    className={cn(
+                      'w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0',
+                      selectedModel === 'claude'
+                        ? 'border-accent-green bg-accent-green'
+                        : 'border-text-muted'
+                    )}
+                  >
+                    {selectedModel === 'claude' && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-background" />
+                    )}
+                  </div>
+                  <span className="text-sm text-text-primary font-medium">Claude</span>
+                </label>
+
+                <label
+                  className={cn(
+                    'flex items-center gap-2.5 p-3 rounded-lg cursor-pointer transition-all',
+                    'hover:bg-background-input',
+                    selectedModel === 'gemini' && 'bg-background-input ring-2 ring-accent-green',
+                    isLoading && 'opacity-50 cursor-not-allowed'
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="ai-model"
+                    value="gemini"
+                    checked={selectedModel === 'gemini'}
+                    onChange={(e) => setSelectedModel(e.target.value as 'claude' | 'gemini')}
+                    disabled={isLoading}
+                    className="sr-only"
+                  />
+                  <div
+                    className={cn(
+                      'w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0',
+                      selectedModel === 'gemini'
+                        ? 'border-accent-green bg-accent-green'
+                        : 'border-text-muted'
+                    )}
+                  >
+                    {selectedModel === 'gemini' && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-background" />
+                    )}
+                  </div>
+                  <span className="text-sm text-text-primary font-medium">Gemini</span>
+                </label>
               </div>
             </div>
 

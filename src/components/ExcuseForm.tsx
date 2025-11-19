@@ -99,6 +99,7 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
     style: string;
     narrativeElements: string[];
     excuseFocus: string;
+    aiModel?: 'claude' | 'gemini';
   }) => {
     // Validate form first
     if (!validateForm()) {
@@ -115,6 +116,7 @@ export default function ExcuseForm({ onSubmit, isLoading, disabled = false }: Ex
         style: options.style,
         narrativeElements: options.narrativeElements,
         excuseFocus: options.excuseFocus,
+        aiModel: options.aiModel,
       },
     });
 

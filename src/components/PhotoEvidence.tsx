@@ -352,7 +352,7 @@ export default function PhotoEvidence({
             <div className="mt-4 text-text-muted text-sm space-y-2">
               <p>Sometimes our photographic evidence creation team do a good job, and sometimes they don't.</p>
               <p>If you're not completely satisfied with your evidence, you could always spend a few years mastering photo editing yourself.</p>
-              <p>Or, you could not be so guilty in the first place I guess.</p>
+              <p>Or, you could not be so guilty in the first place.</p>
             </div>
           )}
         </div>
