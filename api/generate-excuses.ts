@@ -897,10 +897,11 @@ DO NOT include any text outside the JSON object. DO NOT use markdown code blocks
         });
       }
 
-      // Return excuses to browser with the comedic style
+      // Return excuses to browser with the comedic style and excuse focus
       const response = {
         ...excuses,
-        comedicStyle: selectedStyle
+        comedicStyle: selectedStyle,
+        excuseFocus: customOptions?.excuseFocus
       };
 
       // Log successful response

@@ -1,4 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Serverless function to generate AI images using Gemini API
@@ -103,6 +105,11 @@ interface RequestBody {
   comedicStyle: string;
   headshotBase64?: string;
   headshotMimeType?: string;
+  originalSituation?: string;
+  keepSameClothes?: boolean;
+  aspectRatio?: string;
+  lusciousLocks?: boolean;
+  excuseFocus?: string;
 }
 
 interface ImageResponse {
@@ -139,7 +146,7 @@ export default async function handler(
   }
 
   try {
-    const { excuseText, comedicStyle, headshotBase64, headshotMimeType } = req.body as RequestBody;
+    const { excuseText, comedicStyle, headshotBase64, headshotMimeType, originalSituation, keepSameClothes = true, aspectRatio = '16:9', lusciousLocks = false, excuseFocus } = req.body as RequestBody;
 
     // Log request received
     console.log(JSON.stringify({
@@ -393,50 +400,6 @@ LIGHTING:
 - High contrast, moody cinematography`
       },
 
-      'Self-deprecating': {
-        withHeadshot: `VISUAL STYLE: Professional Photo / Amateur Moment
-Create a PROFESSIONALLY SHOT photograph of the subject looking FOOLISH/INCOMPETENT. High photo quality contrasting with embarrassing moment. Subject must be 100% recognizable, clearly the fool in this scenario.
-
-SELF-DEPRECATING VISUAL ELEMENTS:
-- Subject looking incompetent, foolish, caught making obvious mistake
-- Professional photo quality making the embarrassment crystal clear
-- Visual evidence of their poor judgment/skills
-- Expressions of confusion, mistake realization, sheepishness
-- Environmental evidence of their incompetence visible
-- Contrast: good photo of bad moment
-
-COMPOSITION & CAMERA:
-- Clear, well-composed shot emphasizing the foolishness
-- Subject fully visible in their moment of incompetence
-- No flattering angles - honest capture of the fail
-- Clean composition showing the mistake clearly
-
-LIGHTING:
-- Good lighting that makes everything painfully clear
-- Natural, honest lighting (not dramatic - just clear documentation)
-- Well-lit embarrassment - no shadows to hide behind`,
-
-        withoutHeadshot: `VISUAL STYLE: Evidence of Incompetence
-Create clear environmental evidence of FOOLISH MISTAKES and POOR JUDGMENT. Professional photo quality documenting amateur-hour disaster.
-
-SELF-DEPRECATING VISUAL ELEMENTS:
-- Clear evidence of incompetence in the scene
-- Amateur mistakes professionally documented
-- Visual proof of poor judgment
-- Environmental storytelling of the fail
-- Honest, unflattering evidence
-
-COMPOSITION:
-- Clear documentation of the mistake
-- Well-composed evidence of incompetence
-- Straightforward, honest framing
-
-LIGHTING:
-- Clear, honest lighting showing everything
-- Natural documentation style
-- No hiding the evidence`
-      },
-
       'Ironic': {
         withHeadshot: `VISUAL STYLE: Situational Irony Photography
 Create a photorealistic image showcasing VISUAL IRONY and CONTRADICTION. The subject must be 100% recognizable in a situation that's the OPPOSITE of what they intended. Show the ironic twist visually.
@@ -575,7 +538,7 @@ LIGHTING:
 - Night vision or harsh fluorescent`
       },
 
-      'Passive-Aggressive': {
+      'Passive-aggressive': {
         withHeadshot: `VISUAL STYLE: Passive-Aggressive / Subtle Hostility Photography
 Create a photorealistic image with SUBTLY HOSTILE, PASSIVE-AGGRESSIVE atmosphere. The subject should appear innocent on the surface but with underlying tension and subtle blame-shifting energy.
 
@@ -621,7 +584,7 @@ LIGHTING:
 - Evidence well-lit for documentation`
       },
 
-      'Corporate Jargon': {
+      'Corporate-jargon': {
         withHeadshot: `VISUAL STYLE: Corporate / Business Stock Photography
 Create a photorealistic image with CORPORATE, BUSINESS PROFESSIONAL aesthetic. The subject should appear as a typical corporate professional in a business environment.
 
@@ -680,22 +643,66 @@ LIGHTING:
 
     let prompt: string;
 
+    // Build clothing instruction based on preference
+    const clothingInstruction = keepSameClothes
+      ? `CLOTHING: Keep the subject wearing the EXACT same clothes as in the reference photo. Do not change or modify their outfit.`
+      : `CLOTHING: Feel free to creatively dress the subject in appropriate attire for the scenario. The outfit should enhance the comedic effect while fitting the situation.`;
+
+    // Build hair instruction based on luscious locks mode
+    const hairInstruction = lusciousLocks
+      ? `HAIR (LUSCIOUS LOCKS MODE - CRITICAL OVERRIDE):
+✓ IGNORE the subject's original hair completely
+✓ Give the subject LONG, FLOWING, LUXURIOUS BLONDE HAIR
+✓ The hair should be glamorous, voluminous, and flowing dramatically
+✓ Think shampoo commercial, golden goddess, fairy tale princess vibes
+✓ This supersedes ALL other hair instructions - blonde luscious locks no matter what
+
+CAMERA DISTANCE (CRITICAL FOR LUSCIOUS LOCKS):
+✓ Subject MUST be at MIDDLE DISTANCE or CLOSER to camera
+✓ Face and flowing blonde hair must be clearly visible and recognizable
+✗ NO far shots, wide shots, or distant compositions
+✗ Subject cannot be tiny or far away - the hair transformation must be obvious`
+      : `HAIR (CRITICAL - DO NOT CHANGE):
+✓ HAIR must match EXACTLY from reference photo - same color, length, style, texture
+✓ This is NON-NEGOTIABLE - the subject's hair is part of their identity
+✗ NEVER change hair color (no darkening, lightening, or color shifts)
+✗ NEVER change hair length (no shortening or lengthening)
+✗ NEVER change hair style (no curling straight hair, straightening curly hair)
+✗ NEVER add or remove facial hair
+✗ Treat the hair exactly like the face - it must remain unchanged`;
+
     if (headshotBase64) {
       // With headshot - composite the person into the scene
+      // Include original situation if provided for better context
+      const contextSection = originalSituation
+        ? `ORIGINAL SITUATION: ${originalSituation}
+
+GENERATED EXCUSE: ${excuseText}
+
+YOUR TASK: Create an image that visually supports this excuse while referencing what actually happened. The image should be humorous (matching the excuse's tone) but grounded in the original situation. Focus on making the excuse believable through visual "evidence".`
+        : `EXCUSE CONTEXT: ${excuseText}
+
+YOUR TASK: Photograph this person in a scenario visually depicting their excuse.`;
+
       prompt = `${styleInstructions.withHeadshot}
 
-EXCUSE CONTEXT: ${excuseText}
+${contextSection}
 
-YOUR TASK: Photograph this person in a scenario visually depicting their excuse. Their face and body must remain 100% PHOTOREALISTIC and RECOGNIZABLE - treat them as a real person being photographed, not a cartoon or illustration. Integrate them naturally into the scene with proper lighting, shadows, and perspective.
+The subject's IDENTITY must remain recognizable (same person), but you have creative freedom with their EXPRESSION and BODY LANGUAGE to match the scenario - they can look surprised, guilty, confused, innocent, etc. as appropriate for the excuse.
+
+${clothingInstruction}
 
 ═══ CRITICAL RULES ═══
 
 PEOPLE RULES:
 ✓ ONLY the uploaded person/people may appear
-✓ Keep their faces 100% recognizable (same person, just in this scenario)
+✓ Keep their IDENTITY recognizable (same facial features = same person)
+✓ EXPRESSIONS can change to fit scenario (surprised, guilty, innocent, etc.)
 ✓ Anonymous strangers in functional roles OK if essential (cop, waiter, random crowd)
 ✗ NEVER: partners, family, friends, coworkers, anyone with personal relationship
 ✗ When unsure, show subject alone
+
+${hairInstruction}
 
 TEXT RULES (CRITICAL):
 ✗ NO readable text beyond single words - AI text becomes gibberish
@@ -708,14 +715,25 @@ PHOTO QUALITY:
 - Photorealistic subject integrated naturally into styled scenario
 - Proper lighting, shadows, perspective on subject
 - Subject appears to genuinely inhabit this world
-- 16:9 aspect ratio`;
+- ${aspectRatio} aspect ratio`;
     } else {
       // Without headshot - generate generic scenario
+      // Include original situation if provided for better context
+      const contextSection = originalSituation
+        ? `ORIGINAL SITUATION: ${originalSituation}
+
+GENERATED EXCUSE: ${excuseText}
+
+YOUR TASK: Create environmental evidence that visually supports this excuse while referencing what actually happened. The image should be humorous (matching the excuse's tone) but grounded in the original situation.`
+        : `EXCUSE CONTEXT: ${excuseText}
+
+YOUR TASK: Create environmental evidence proving this excuse happened.`;
+
       prompt = `${styleInstructions.withoutHeadshot}
 
-EXCUSE CONTEXT: ${excuseText}
+${contextSection}
 
-YOUR TASK: Create environmental evidence proving this excuse happened. Focus on the scene, aftermath, or objects - NOT people (we don't know what they look like). Photorealistic quality following the visual style.
+Focus on the scene, aftermath, or objects - NOT people (we don't know what they look like). Photorealistic quality following the visual style.
 
 ═══ CRITICAL RULES ═══
 
@@ -736,7 +754,7 @@ PHOTO QUALITY:
 - Photorealistic environmental evidence
 - Professional quality following visual style
 - Scenario details clearly visible
-- 16:9 aspect ratio`;
+- ${aspectRatio} aspect ratio`;
     }
 
     // Call Gemini 2.5 Flash Image API for image generation
@@ -747,14 +765,231 @@ PHOTO QUALITY:
       // Build the request parts array
       const requestParts: Array<{ inline_data?: { mime_type: string; data: string }; text?: string }> = [];
 
-      // Add headshot as inline_data if provided (must come before text prompt)
-      if (headshotBase64 && headshotMimeType) {
-        requestParts.push({
-          inline_data: {
-            mime_type: headshotMimeType,
-            data: headshotBase64
-          }
-        });
+      // Check if we need to include Robin Skidmore
+      const isRobinBlamed = excuseFocus === 'blame-robin-skidmore';
+      let robinHeadshotBase64: string | null = null;
+
+      // Debug logging for Robin detection
+      console.log(`Robin detection - excuseFocus: ${excuseFocus}, isRobinBlamed: ${isRobinBlamed}`);
+
+      if (isRobinBlamed) {
+        // Load Robin's headshot from public folder
+        try {
+          const robinPath = path.join(process.cwd(), 'public', 'robin-skidmore.png');
+          console.log(`Attempting to load Robin headshot from: ${robinPath}`);
+          const robinBuffer = fs.readFileSync(robinPath);
+          robinHeadshotBase64 = robinBuffer.toString('base64');
+          console.log(`Successfully loaded Robin headshot, size: ${robinBuffer.length} bytes`);
+        } catch (err) {
+          console.error('Failed to load Robin Skidmore headshot:', err);
+          // Continue without Robin's headshot if it fails
+        }
+      }
+
+      // Add headshots based on scenario
+      if (isRobinBlamed && robinHeadshotBase64) {
+        if (headshotBase64 && headshotMimeType) {
+          // User + Robin scenario: add user's photo first, then Robin's
+          requestParts.push({
+            inline_data: {
+              mime_type: headshotMimeType,
+              data: headshotBase64
+            }
+          });
+          requestParts.push({
+            inline_data: {
+              mime_type: 'image/png',
+              data: robinHeadshotBase64
+            }
+          });
+
+          // Build prompt for User + Robin scenario
+          const userHairInstruction = lusciousLocks
+            ? `FIRST PERSON (User) HAIR (LUSCIOUS LOCKS MODE):
+✓ Give them LONG, FLOWING, LUXURIOUS BLONDE HAIR
+✓ Glamorous, voluminous, flowing dramatically`
+            : `FIRST PERSON (User) HAIR (CRITICAL - DO NOT CHANGE):
+✓ Match EXACTLY from their reference photo - same color, length, style, texture
+✗ NEVER change hair color, length, or style - this is NON-NEGOTIABLE`;
+
+          const robinHairInstruction = lusciousLocks
+            ? `SECOND PERSON (Robin) HAIR (LUSCIOUS LOCKS MODE):
+✓ Give Robin LONG, FLOWING, LUXURIOUS BLONDE HAIR
+✓ Glamorous, voluminous, flowing dramatically`
+            : `SECOND PERSON (Robin) HAIR:
+✓ Keep Robin's short dark hair exactly as shown`;
+
+          const cameraDistanceInstruction = lusciousLocks
+            ? `CAMERA DISTANCE (CRITICAL FOR LUSCIOUS LOCKS):
+✓ BOTH subjects MUST be at MIDDLE DISTANCE or CLOSER to camera
+✓ Faces and flowing blonde hair must be clearly visible and recognizable
+✗ NO far shots, wide shots, or distant compositions
+
+LUSCIOUS LOCKS WITH TWO PEOPLE - FACE PRESERVATION (CRITICAL):
+✓ ONLY the hair changes to luscious blonde locks - NOTHING ELSE
+✓ Every facial feature must remain EXACTLY as in reference photos
+✓ Eyes, nose, mouth, face shape, skin tone - ALL UNCHANGED
+✓ The hair transformation is the joke - the faces make it recognizable
+✓ If facial features change, the humor is LOST
+✗ Do NOT let the blonde hair transformation affect facial features
+✗ Do NOT smooth, alter, or modify any part of the face`
+            : ``;
+
+          prompt = `${styleInstructions.withHeadshot}
+
+═══ #1 PRIORITY - FACIAL IDENTITY (READ THIS FIRST) ═══
+Before doing ANYTHING else, understand this: BOTH people must be 100% recognizable.
+- The FIRST person's face must exactly match their reference photo
+- The SECOND person's face must exactly match their reference photo
+- If someone who knows these people can't immediately recognize them, the image has FAILED
+- Prioritize facial accuracy over everything else including creativity and composition
+
+ORIGINAL SITUATION: ${originalSituation || excuseText}
+
+GENERATED EXCUSE: ${excuseText}
+
+YOUR TASK: Create an image showing BOTH people from the reference photos together in a scene depicting this excuse. Both people must be clearly visible and their faces must be recognizable.
+
+CAMERA FRAMING (CRITICAL):
+✓ Frame both people from WAIST UP or CLOSER
+✓ Both faces must be clearly visible and large enough to recognize
+✓ Portrait-style or medium shot composition
+✗ NO wide shots where faces are small
+✗ NO distant shots where people are far from camera
+
+PEOPLE IDENTIFICATION:
+- FIRST PHOTO = The excuse-maker (user) - they should look innocent, surprised, or observing
+- SECOND PHOTO = Robin Skidmore - he should look surprised, bewildered, or embarrassed
+
+${clothingInstruction}
+
+ROBIN'S CLOTHING: Robin must ALWAYS wear the exact same black t-shirt as in his reference photo.
+
+${userHairInstruction}
+
+${robinHairInstruction}
+
+${cameraDistanceInstruction}
+
+═══ CRITICAL RULES ═══
+
+FACIAL IDENTITY (ABSOLUTE #1 PRIORITY - NON-NEGOTIABLE):
+✓ FIRST PERSON: Copy their face EXACTLY from the first reference photo
+  - Same eyes (shape, color, size, spacing)
+  - Same nose (shape, size, bridge)
+  - Same mouth (shape, lips, smile)
+  - Same face shape, jawline, cheekbones
+  - Same skin tone and texture
+✓ SECOND PERSON: Copy their face EXACTLY from the second reference photo
+  - Same eyes, nose, mouth, face shape
+  - Same skin tone and texture
+✓ Treat the reference photos as the AUTHORITATIVE source for facial features
+✓ The faces must be IDENTICAL to the references - not similar, IDENTICAL
+✗ NEVER smooth, beautify, or "improve" faces
+✗ NEVER average features between the two people
+✗ NEVER let the scenario influence facial features
+✗ If you can't tell who the people are, START OVER
+
+PEOPLE RULES:
+✓ BOTH people from the reference photos MUST appear
+✓ User = innocent/accusatory expression, Robin = surprised/bewildered expression
+✓ Dynamic interaction showing comedic scenario
+✗ NO other identifiable people with personal relationships
+
+TEXT RULES (CRITICAL):
+✗ NO readable text beyond single words
+✓ Focus on VISUAL storytelling
+
+PHOTO QUALITY:
+- Photorealistic subjects integrated naturally
+- Proper lighting, shadows, perspective
+- ${aspectRatio} aspect ratio`;
+        } else {
+          // Robin alone scenario: just add Robin's photo
+          requestParts.push({
+            inline_data: {
+              mime_type: 'image/png',
+              data: robinHeadshotBase64
+            }
+          });
+
+          // Build prompt for Robin alone scenario - use same structure as normal user headshot
+          const robinHairInstruction = lusciousLocks
+            ? `HAIR (LUSCIOUS LOCKS MODE - CRITICAL OVERRIDE):
+✓ IGNORE Robin's original hair completely
+✓ Give Robin LONG, FLOWING, LUXURIOUS BLONDE HAIR
+✓ The hair should be glamorous, voluminous, and flowing dramatically
+✓ Think shampoo commercial, golden goddess, fairy tale princess vibes
+✓ This supersedes ALL other hair instructions - blonde luscious locks no matter what
+
+CAMERA DISTANCE (CRITICAL FOR LUSCIOUS LOCKS):
+✓ Subject MUST be at MIDDLE DISTANCE or CLOSER to camera
+✓ Face and flowing blonde hair must be clearly visible and recognizable
+✗ NO far shots, wide shots, or distant compositions
+✗ Subject cannot be tiny or far away - the hair transformation must be obvious`
+            : `HAIR (CRITICAL - DO NOT CHANGE):
+✓ HAIR must match EXACTLY from reference photo - same color, length, style, texture
+✓ This is NON-NEGOTIABLE - the subject's hair is part of their identity
+✗ NEVER change hair color (no darkening, lightening, or color shifts)
+✗ NEVER change hair length (no shortening or lengthening)
+✗ NEVER change hair style (no curling straight hair, straightening curly hair)
+✗ NEVER add or remove facial hair
+✗ Treat the hair exactly like the face - it must remain unchanged`;
+
+          // Use the same context section structure as normal flow
+          const contextSection = originalSituation
+            ? `ORIGINAL SITUATION: ${originalSituation}
+
+GENERATED EXCUSE: ${excuseText}
+
+YOUR TASK: Create an image that visually supports this excuse while referencing what actually happened. The image should be humorous (matching the excuse's tone) but grounded in the original situation. Focus on making the excuse believable through visual "evidence".`
+            : `EXCUSE CONTEXT: ${excuseText}
+
+YOUR TASK: Photograph this person in a scenario visually depicting their excuse.`;
+
+          prompt = `${styleInstructions.withHeadshot}
+
+${contextSection}
+
+The subject's IDENTITY must remain recognizable (same person), but you have creative freedom with their EXPRESSION and BODY LANGUAGE to match the scenario - they can look surprised, guilty, confused, innocent, etc. as appropriate for the excuse.
+
+CLOTHING: Keep the subject wearing the EXACT same black t-shirt as in the reference photo. Do not change or modify their outfit.
+
+═══ CRITICAL RULES ═══
+
+PEOPLE RULES:
+✓ ONLY the uploaded person may appear
+✓ Keep their IDENTITY recognizable (same facial features = same person)
+✓ EXPRESSIONS can change to fit scenario (surprised, guilty, innocent, etc.)
+✓ Anonymous strangers in functional roles OK if essential (cop, waiter, random crowd)
+✗ NEVER: partners, family, friends, coworkers, anyone with personal relationship
+✗ When unsure, show subject alone
+
+${robinHairInstruction}
+
+TEXT RULES (CRITICAL):
+✗ NO readable text beyond single words - AI text becomes gibberish
+✗ NO documents, newspapers, books, signs with multiple lines
+✗ NO speech bubbles with sentences
+✓ Single words only if essential ("STOP", "EXIT")
+✓ Focus on VISUAL storytelling, not text
+
+PHOTO QUALITY:
+- Photorealistic subject integrated naturally into styled scenario
+- Proper lighting, shadows, perspective on subject
+- Subject appears to genuinely inhabit this world
+- ${aspectRatio} aspect ratio`;
+        }
+      } else {
+        // Normal flow: add user headshot if provided
+        if (headshotBase64 && headshotMimeType) {
+          requestParts.push({
+            inline_data: {
+              mime_type: headshotMimeType,
+              data: headshotBase64
+            }
+          });
+        }
       }
 
       // Add the text prompt
@@ -777,7 +1012,7 @@ PHOTO QUALITY:
             generationConfig: {
               responseModalities: ["Image"],
               imageConfig: {
-                aspectRatio: "16:9"
+                aspectRatio: aspectRatio
               }
             }
           }),

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image as ImageIcon, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -26,6 +26,25 @@ const accentColorClasses = {
   },
 };
 
+// Witty loading messages for image generation
+const loadingMessages = [
+  "Fabricating photographic evidence...",
+  "Staging the crime scene...",
+  "Teaching AI to lie convincingly...",
+  "Adjusting the lighting on your alibi...",
+  "Making it look totally legit...",
+  "Adding just the right amount of chaos...",
+  "Consulting with professional excuse-makers...",
+  "Photoshopping your innocence...",
+  "Creating plausible deniability...",
+  "Generating your get-out-of-jail card...",
+  "Manufacturing proof of your whereabouts...",
+  "Crafting visual believability...",
+  "Adding dramatic effect...",
+  "Making fiction look like fact...",
+  "Assembling your defence exhibit...",
+];
+
 export default function ImageDisplay({
   imageUrl,
   isLoading,
@@ -33,7 +52,25 @@ export default function ImageDisplay({
   excuseType,
 }: ImageDisplayProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const colorClasses = accentColorClasses[accentColor];
+
+  // Rotate through loading messages
+  useEffect(() => {
+    if (!isLoading) {
+      setCurrentMessageIndex(0);
+      return;
+    }
+
+    // Set random initial message
+    setCurrentMessageIndex(Math.floor(Math.random() * loadingMessages.length));
+
+    const interval = setInterval(() => {
+      setCurrentMessageIndex(prev => (prev + 1) % loadingMessages.length);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   const handleImageClick = () => {
     if (imageUrl && !isLoading) {
@@ -53,7 +90,7 @@ export default function ImageDisplay({
     >
       <AnimatePresence mode="wait">
         {isLoading ? (
-          // Loading State
+          // Loading State with rotating messages
           <motion.div
             key="loading"
             initial={{ opacity: 0 }}
@@ -64,20 +101,32 @@ export default function ImageDisplay({
             <div className="relative">
               <div
                 className={cn(
-                  'animate-spin rounded-full h-16 w-16 border-4 border-t-transparent',
-                  `border-accent-${accentColor}`
+                  'animate-spin rounded-full h-16 w-16 border-4',
+                  accentColor === 'purple' ? 'border-accent-purple' : 'border-accent-green',
+                  'border-t-transparent'
                 )}
               />
               <div
                 className={cn(
-                  'absolute inset-0 animate-spin rounded-full h-16 w-16 border-4 border-t-transparent blur-md opacity-50',
-                  `border-accent-${accentColor}`
+                  'absolute inset-0 animate-spin rounded-full h-16 w-16 border-4 blur-md opacity-50',
+                  accentColor === 'purple' ? 'border-accent-purple' : 'border-accent-green',
+                  'border-t-transparent'
                 )}
+                style={{ animationDirection: 'reverse' }}
               />
             </div>
-            <p className="text-text-secondary text-lg text-center font-medium">
-              Generating your photo evidence...
-            </p>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={currentMessageIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="text-text-secondary text-lg text-center font-medium"
+              >
+                {loadingMessages[currentMessageIndex]}
+              </motion.p>
+            </AnimatePresence>
           </motion.div>
         ) : imageUrl ? (
           // Image Display State - Clickable to open full screen
@@ -130,12 +179,11 @@ export default function ImageDisplay({
               </motion.div>
             </div>
 
-            {/* Subtle hint text at bottom */}
+            {/* Permanent hint text at bottom - always visible */}
             <div
               className={cn(
                 'absolute bottom-0 left-0 right-0',
                 'bg-gradient-to-t from-black/60 to-transparent',
-                'opacity-0 group-hover:opacity-100 transition-opacity duration-300',
                 'p-3 text-center',
                 'pointer-events-none'
               )}

@@ -20,6 +20,7 @@ function App() {
 
   // Generated content
   const [excuses, setExcuses] = useState<ExcusesResponse | null>(null);
+  const [originalSituation, setOriginalSituation] = useState<string>('');
   const [imagesByExcuse, setImagesByExcuse] = useState<
     Record<'excuse1' | 'excuse2', string | null>
   >({
@@ -51,6 +52,7 @@ function App() {
       setIsGeneratingExcuses(true);
       setError(null);
       setShowExcuses(false);
+      setOriginalSituation(data.scenario); // Store for image generation
 
       const response = await fetch('/api/generate-excuses', {
         method: 'POST',
@@ -87,7 +89,10 @@ function App() {
   const generateImage = async (
     excuseType: 'excuse1' | 'excuse2',
     headshotBase64?: string,
-    headshotMimeType?: 'image/jpeg' | 'image/png'
+    headshotMimeType?: 'image/jpeg' | 'image/png',
+    keepSameClothes: boolean = true,
+    aspectRatio: string = '16:9',
+    lusciousLocks: boolean = false
   ) => {
     if (!excuses) return;
 
@@ -107,6 +112,11 @@ function App() {
           comedicStyle: styleToUse,
           headshotBase64,
           headshotMimeType,
+          originalSituation,
+          keepSameClothes,
+          aspectRatio,
+          lusciousLocks,
+          excuseFocus: excuses.excuseFocus,
         }),
       });
 
@@ -143,8 +153,6 @@ function App() {
             isLoading={isGeneratingExcuses}
           />
 
-          {error && <ErrorMessage message={error} />}
-
           {showExcuses && excuses && (
             <>
               <ExcuseCards
@@ -163,10 +171,12 @@ function App() {
                 }
                 isGenerating={isGeneratingImage}
                 generatedImage={imagesByExcuse[selectedExcuseTab]}
-                onGenerate={(headshotBase64, headshotMimeType) =>
-                  generateImage(selectedExcuseTab, headshotBase64, headshotMimeType)
+                onGenerate={(headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks) =>
+                  generateImage(selectedExcuseTab, headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks)
                 }
               />
+
+              {error && <ErrorMessage message={error} />}
             </>
           )}
         </div>

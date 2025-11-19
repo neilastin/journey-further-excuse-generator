@@ -99,9 +99,15 @@ export default function CustomiseModal({
     }
   };
 
+  // Ref to scrollable container for scroll position preservation
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   // Handle narrative element toggle
   const handleElementToggle = (elementId: string) => {
     if (isLoading) return;
+
+    // Save scroll position before state update
+    const scrollTop = scrollContainerRef.current?.scrollTop || 0;
 
     setSelectedElements((prev) => {
       if (prev.includes(elementId)) {
@@ -113,6 +119,13 @@ export default function CustomiseModal({
       }
       // Max limit reached, ignore
       return prev;
+    });
+
+    // Restore scroll position after React updates
+    requestAnimationFrame(() => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTop = scrollTop;
+      }
     });
   };
 
@@ -150,12 +163,11 @@ export default function CustomiseModal({
       aria-labelledby="modal-title"
     >
       <motion.div
-        layout="position"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ type: 'spring', duration: 0.3 }}
-        className="relative w-full max-w-[600px] h-auto max-h-[85vh] bg-background-card rounded-card shadow-2xl overflow-hidden flex flex-col"
+        transition={{ duration: 0.2 }}
+        className="relative w-full max-w-[600px] max-h-[85vh] bg-background-card rounded-card shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
           {/* Header */}
@@ -179,7 +191,11 @@ export default function CustomiseModal({
           </div>
 
           {/* Scrollable Content */}
-          <div className="overflow-y-auto flex-1 min-h-0 px-5 md:px-6 py-4 space-y-4">
+          <div
+            ref={scrollContainerRef}
+            className="overflow-y-auto flex-1 min-h-0 px-5 md:px-6 py-4 space-y-4"
+            style={{ overflowAnchor: 'none' }}
+          >
             {/* Two Column Layout on Desktop */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
               {/* Left Column: Excuse Focus */}
@@ -291,29 +307,33 @@ export default function CustomiseModal({
                       ? 'bg-accent-green/20 text-accent-green'
                       : 'bg-background-input text-text-secondary'
                   )}
-                  aria-live="polite"
                 >
                   {selectedElements.length}/{MAX_NARRATIVE_ELEMENTS} selected
                 </span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {ALWAYS_AVAILABLE_ELEMENTS.map((element) => (
-                  <label
+                  <div
                     key={element.id}
+                    role="checkbox"
+                    aria-checked={selectedElements.includes(element.id)}
+                    aria-disabled={isElementDisabled(element.id)}
+                    tabIndex={isElementDisabled(element.id) ? -1 : 0}
+                    onClick={() => handleElementToggle(element.id)}
+                    onKeyDown={(e) => {
+                      if ((e.key === ' ' || e.key === 'Enter') && !isElementDisabled(element.id)) {
+                        e.preventDefault();
+                        handleElementToggle(element.id);
+                      }
+                    }}
                     className={cn(
                       'flex items-center gap-2.5 p-2.5 rounded-lg cursor-pointer transition-all',
                       'hover:bg-background-input',
+                      'focus:outline-none focus:ring-2 focus:ring-accent-green',
                       selectedElements.includes(element.id) && 'bg-background-input ring-2 ring-accent-green',
                       isElementDisabled(element.id) && 'opacity-50 cursor-not-allowed'
                     )}
                   >
-                    <input
-                      type="checkbox"
-                      checked={selectedElements.includes(element.id)}
-                      onChange={() => handleElementToggle(element.id)}
-                      disabled={isElementDisabled(element.id)}
-                      className="sr-only"
-                    />
                     <div
                       className={cn(
                         'w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0',
@@ -340,7 +360,7 @@ export default function CustomiseModal({
                       {element.emoji}
                     </span>
                     <span className="text-sm text-text-primary font-medium">{element.label}</span>
-                  </label>
+                  </div>
                 ))}
               </div>
             </div>
@@ -356,23 +376,28 @@ export default function CustomiseModal({
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-3 rounded-lg bg-accent-blue/15 border border-accent-blue/40">
                   {limitedTimeElements.map((element) => (
-                    <label
+                    <div
                       key={element.id}
+                      role="checkbox"
+                      aria-checked={selectedElements.includes(element.id)}
+                      aria-disabled={isElementDisabled(element.id)}
+                      tabIndex={isElementDisabled(element.id) ? -1 : 0}
+                      onClick={() => handleElementToggle(element.id)}
+                      onKeyDown={(e) => {
+                        if ((e.key === ' ' || e.key === 'Enter') && !isElementDisabled(element.id)) {
+                          e.preventDefault();
+                          handleElementToggle(element.id);
+                        }
+                      }}
                       className={cn(
                         'flex items-center gap-2.5 p-2.5 rounded-lg cursor-pointer transition-all',
                         'hover:bg-accent-blue/20',
+                        'focus:outline-none focus:ring-2 focus:ring-accent-blue',
                         selectedElements.includes(element.id) &&
                           'bg-accent-blue/20 ring-2 ring-accent-blue',
                         isElementDisabled(element.id) && 'opacity-50 cursor-not-allowed'
                       )}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedElements.includes(element.id)}
-                        onChange={() => handleElementToggle(element.id)}
-                        disabled={isElementDisabled(element.id)}
-                        className="sr-only"
-                      />
                       <div
                         className={cn(
                           'w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0',
@@ -399,7 +424,7 @@ export default function CustomiseModal({
                         {element.emoji}
                       </span>
                       <span className="text-sm text-text-primary font-medium">{element.label}</span>
-                    </label>
+                    </div>
                   ))}
                 </div>
               </div>

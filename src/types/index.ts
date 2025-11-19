@@ -34,6 +34,7 @@ export interface ExcusesResponse {
   excuse1: ExcuseItem;
   excuse2: ExcuseItem;
   comedicStyle: string; // The style used for excuse2 (Risky excuse)
+  excuseFocus?: string; // The excuse focus used (e.g., 'robin-skidmore')
 }
 
 // Form dropdown options
