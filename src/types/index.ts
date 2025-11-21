@@ -67,6 +67,12 @@ export interface GenerateImageRequest {
   comedicStyle: string; // The comedic style from the excuse
   headshotBase64?: string;
   headshotMimeType?: string;
+  originalSituation?: string;
+  keepSameClothes?: boolean;
+  aspectRatio?: string;
+  lusciousLocks?: boolean;
+  excuseFocus?: string;
+  imageQuality?: 'standard' | 'pro'; // Image generation quality tier
 }
 
 // API response types
@@ -90,4 +96,29 @@ export interface ExcuseCardProps {
 export interface LoadingAnimationProps {
   messages: string[];
   interval?: number; // milliseconds between message changes
+}
+
+// Admin unlock types
+export interface AdminUnlockRequest {
+  password: string;
+}
+
+export interface AdminUnlockResponse {
+  success: boolean;
+  token?: string;
+  message?: string;
+}
+
+// Slack sharing types
+export interface ShareToSlackRequest {
+  scenario: string;
+  excuseText: string;
+  excuseType: 'excuse1' | 'excuse2' | 'excuse3';
+  imageBase64: string;
+}
+
+export interface ShareToSlackResponse {
+  success: boolean;
+  message?: string;
+  remaining?: number;
 }

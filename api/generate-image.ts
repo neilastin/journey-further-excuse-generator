@@ -110,6 +110,7 @@ interface RequestBody {
   aspectRatio?: string;
   lusciousLocks?: boolean;
   excuseFocus?: string;
+  imageQuality?: 'standard' | 'pro';
 }
 
 interface ImageResponse {
@@ -152,7 +153,7 @@ export default async function handler(
   }
 
   try {
-    const { excuseText, comedicStyle, headshotBase64, headshotMimeType, originalSituation, keepSameClothes = true, aspectRatio = '16:9', lusciousLocks = false, excuseFocus } = req.body as RequestBody;
+    const { excuseText, comedicStyle, headshotBase64, headshotMimeType, originalSituation, keepSameClothes = true, aspectRatio = '16:9', lusciousLocks = false, excuseFocus, imageQuality = 'standard' } = req.body as RequestBody;
 
     // Log request received
     console.log(JSON.stringify({
@@ -697,6 +698,22 @@ YOUR TASK: Create an image that visually supports this excuse while referencing 
 
 YOUR TASK: Photograph this person in a scenario visually depicting their excuse.`;
 
+      // Text rules vary based on image quality
+      // Pro mode: Relax restrictions (Gemini 3 Pro has advanced text rendering)
+      // Standard mode: Keep strict (Gemini 2.5 Flash struggles with text)
+      const textRulesWithHeadshot = imageQuality === 'pro'
+        ? `TEXT RULES:
+✗ NO speech bubbles with dialogue/sentences
+✓ Text elements allowed if they enhance the story (signs, documents, screens, newspapers)
+✓ Keep text brief and relevant to the excuse
+✓ Focus on VISUAL storytelling primarily, text as supporting element`
+        : `TEXT RULES (CRITICAL):
+✗ NO readable text beyond single words - AI text becomes gibberish
+✗ NO documents, newspapers, books, signs with multiple lines
+✗ NO speech bubbles with sentences
+✓ Single words only if essential ("STOP", "EXIT")
+✓ Focus on VISUAL storytelling, not text`;
+
       prompt = `${styleInstructions.withHeadshot}
 
 ${contextSection}
@@ -717,12 +734,7 @@ PEOPLE RULES:
 
 ${hairInstruction}
 
-TEXT RULES (CRITICAL):
-✗ NO readable text beyond single words - AI text becomes gibberish
-✗ NO documents, newspapers, books, signs with multiple lines
-✗ NO speech bubbles with sentences
-✓ Single words only if essential ("STOP", "EXIT")
-✓ Focus on VISUAL storytelling, not text
+${textRulesWithHeadshot}
 
 PHOTO QUALITY:
 - Photorealistic subject integrated naturally into styled scenario
@@ -742,6 +754,20 @@ YOUR TASK: Create environmental evidence that visually supports this excuse whil
 
 YOUR TASK: Create environmental evidence proving this excuse happened.`;
 
+      // Text rules for without-headshot scenario (same quality-based logic)
+      const textRulesWithoutHeadshot = imageQuality === 'pro'
+        ? `TEXT RULES:
+✗ NO speech bubbles with dialogue/sentences
+✓ Text elements allowed if they enhance the story (signs, documents, screens, newspapers)
+✓ Keep text brief and relevant to the excuse
+✓ Focus on VISUAL storytelling primarily, text as supporting element`
+        : `TEXT RULES (CRITICAL):
+✗ NO readable text beyond single words - AI text becomes gibberish
+✗ NO documents, newspapers, books, signs with multiple lines
+✗ NO speech bubbles with sentences
+✓ Single words only if essential ("STOP", "EXIT")
+✓ Focus on VISUAL storytelling, not text`;
+
       prompt = `${styleInstructions.withoutHeadshot}
 
 ${contextSection}
@@ -756,12 +782,7 @@ PEOPLE RULES:
 ✗ NEVER: anyone appearing to have personal relationships
 ✗ When unsure, focus on environment only
 
-TEXT RULES (CRITICAL):
-✗ NO readable text beyond single words - AI text becomes gibberish
-✗ NO documents, newspapers, books, signs with multiple lines
-✗ NO speech bubbles with sentences
-✓ Single words only if essential ("STOP", "EXIT")
-✓ Focus on VISUAL storytelling, not text
+${textRulesWithoutHeadshot}
 
 PHOTO QUALITY:
 - Photorealistic environmental evidence
@@ -770,7 +791,20 @@ PHOTO QUALITY:
 - ${aspectRatio} aspect ratio`;
     }
 
-    // Call Gemini 2.5 Flash Image API for image generation
+    // Add variety to prevent identical regenerations
+    // Gemini is deterministic - same prompt = same image
+    // Add a subtle instruction that varies to encourage variety
+    const varietyHints = [
+      '\n\nVARIATION NOTE: Consider a slightly different angle or composition.',
+      '\n\nVARIATION NOTE: Feel free to vary lighting or perspective slightly.',
+      '\n\nVARIATION NOTE: You can adjust the framing or camera distance.',
+      '\n\nVARIATION NOTE: Consider a different moment in the scenario.',
+      '\n\nVARIATION NOTE: Vary the environmental details or background.',
+    ];
+    const varietyHint = varietyHints[Math.floor(Math.random() * varietyHints.length)];
+    prompt += varietyHint;
+
+    // Call Gemini Image API for image generation
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for image generation
 
@@ -1067,10 +1101,17 @@ PHOTO QUALITY:
       // Add the text prompt
       requestParts.push({ text: prompt });
 
-      // Gemini 2.5 Flash Image API endpoint
+      // Select model based on imageQuality parameter
+      // - standard: Gemini 2.5 Flash Image (fast & cost-effective)
+      // - pro: Gemini 3 Pro Image (higher quality, advanced text rendering)
+      const modelName = imageQuality === 'pro'
+        ? 'gemini-3-pro-image-preview'
+        : 'gemini-2.5-flash-image';
+
+      // Gemini Image API endpoint
       // Using x-goog-api-key header (recommended by Google for security)
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`,
         {
           method: 'POST',
           headers: {

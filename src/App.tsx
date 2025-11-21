@@ -87,7 +87,8 @@ function App() {
     headshotMimeType?: 'image/jpeg' | 'image/png',
     keepSameClothes: boolean = true,
     aspectRatio: string = '16:9',
-    lusciousLocks: boolean = false
+    lusciousLocks: boolean = false,
+    imageQuality: 'standard' | 'pro' = 'standard'
   ) => {
     if (!excuses) return;
 
@@ -112,6 +113,7 @@ function App() {
           aspectRatio,
           lusciousLocks,
           excuseFocus: excuses.excuseFocus,
+          imageQuality,
         }),
       });
 
@@ -157,6 +159,7 @@ function App() {
               />
 
               <PhotoEvidence
+                scenario={originalSituation}
                 excuseText={excuses[selectedExcuseTab].text}
                 excuseType={selectedExcuseTab}
                 accentColor={
@@ -166,8 +169,8 @@ function App() {
                 }
                 isGenerating={isGeneratingImage}
                 generatedImage={imagesByExcuse[selectedExcuseTab]}
-                onGenerate={(headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks) =>
-                  generateImage(selectedExcuseTab, headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks)
+                onGenerate={(headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks, imageQuality) =>
+                  generateImage(selectedExcuseTab, headshotBase64, headshotMimeType, keepSameClothes, aspectRatio, lusciousLocks, imageQuality)
                 }
               />
 

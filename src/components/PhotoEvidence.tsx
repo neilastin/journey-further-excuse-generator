@@ -1,16 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Settings } from 'lucide-react';
 import HeadshotUpload from './HeadshotUpload';
 import ImageDisplay from './ImageDisplay';
+import AdminUnlockModal from './AdminUnlockModal';
 import { cn } from '@/lib/utils';
+import { checkUnlockStatus, setUnlockStatus } from '@/lib/adminAuth';
 
 interface PhotoEvidenceProps {
+  scenario: string;
   excuseText: string;
   excuseType: 'excuse1' | 'excuse2';
   accentColor: 'purple' | 'green';
   isGenerating: boolean;
   generatedImage: string | null;
-  onGenerate: (headshotBase64?: string, headshotMimeType?: 'image/jpeg' | 'image/png', keepSameClothes?: boolean, aspectRatio?: string, lusciousLocks?: boolean) => void;
+  onGenerate: (headshotBase64?: string, headshotMimeType?: 'image/jpeg' | 'image/png', keepSameClothes?: boolean, aspectRatio?: string, lusciousLocks?: boolean, imageQuality?: 'standard' | 'pro') => void;
 }
 
 type AspectRatioOption = {
@@ -38,6 +42,7 @@ const excuseTypeLabels: Record<'excuse1' | 'excuse2', string> = {
 };
 
 export default function PhotoEvidence({
+  scenario,
   excuseText,
   excuseType,
   accentColor,
@@ -56,6 +61,16 @@ export default function PhotoEvidence({
   const [lastToggleTime, setLastToggleTime] = useState(0);
   const [lusciousLocksUnlocked, setLusciousLocksUnlocked] = useState(false);
   const [lusciousLocksEnabled, setLusciousLocksEnabled] = useState(false);
+
+  // Admin pro mode state
+  const [isProModeUnlocked, setIsProModeUnlocked] = useState(false);
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const [imageQuality, setImageQuality] = useState<'standard' | 'pro'>('standard');
+
+  // Check unlock status on mount
+  useEffect(() => {
+    setIsProModeUnlocked(checkUnlockStatus());
+  }, []);
 
   const handleUpload = useCallback((file: File, base64: string, mimeType: 'image/jpeg' | 'image/png') => {
     setHeadshot({ file, base64, mimeType });
@@ -119,13 +134,18 @@ export default function PhotoEvidence({
     setKeepSameClothes(!keepSameClothes);
   }, [lastToggleTime, outfitToggleCount, lusciousLocksUnlocked, headshot, keepSameClothes]);
 
+  const handleUnlock = useCallback((token: string) => {
+    setUnlockStatus(token);
+    setIsProModeUnlocked(true);
+  }, []);
+
   const handleGenerate = useCallback(() => {
     if (headshot) {
-      onGenerate(headshot.base64, headshot.mimeType, keepSameClothes, aspectRatio, lusciousLocksEnabled);
+      onGenerate(headshot.base64, headshot.mimeType, keepSameClothes, aspectRatio, lusciousLocksEnabled, imageQuality);
     } else {
-      onGenerate(undefined, undefined, undefined, aspectRatio, lusciousLocksEnabled);
+      onGenerate(undefined, undefined, undefined, aspectRatio, lusciousLocksEnabled, imageQuality);
     }
-  }, [headshot, onGenerate, keepSameClothes, aspectRatio, lusciousLocksEnabled]);
+  }, [headshot, onGenerate, keepSameClothes, aspectRatio, lusciousLocksEnabled, imageQuality]);
 
   const isButtonDisabled = isGenerating || !excuseText;
   const excuseLabel = excuseTypeLabels[excuseType];
@@ -133,11 +153,25 @@ export default function PhotoEvidence({
   return (
     <section className="mt-16 space-y-8">
       {/* Section Header */}
-      <div className="text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
+      <div className="text-center relative">
+        <h2 className="text-3xl md:text-4xl font-bold text-text-primary inline-block">
           Photo Evidence
         </h2>
+        <button
+          onClick={() => setShowUnlockModal(true)}
+          className="absolute top-1/2 -translate-y-1/2 right-0 md:right-8 text-text-muted hover:text-text-secondary transition-colors opacity-30 hover:opacity-60"
+          aria-label="Admin settings"
+        >
+          <Settings className="w-4 h-4" />
+        </button>
       </div>
+
+      {/* Admin Unlock Modal */}
+      <AdminUnlockModal
+        isOpen={showUnlockModal}
+        onClose={() => setShowUnlockModal(false)}
+        onUnlock={handleUnlock}
+      />
 
       {/* Single Column Layout */}
       <div className="max-w-xl mx-auto space-y-6">
@@ -310,6 +344,61 @@ export default function PhotoEvidence({
           </AnimatePresence>
         </div>
 
+        {/* Image Quality Selector - Pro Mode */}
+        <AnimatePresence>
+          {isProModeUnlocked && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-3"
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-text-primary font-semibold text-lg">
+                  Image Quality (Pro Mode)
+                </h3>
+                <span className="text-xs text-accent-green font-medium">Unlocked</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setImageQuality('standard')}
+                  disabled={isGenerating}
+                  className={cn(
+                    'text-center px-4 py-3 rounded-lg transition-all border-2',
+                    'focus:outline-none focus:ring-2 focus:ring-accent-green focus:ring-offset-2 focus:ring-offset-background',
+                    imageQuality === 'standard'
+                      ? 'bg-accent-green/20 border-accent-green text-text-primary'
+                      : 'bg-background-card border-background-input text-text-secondary hover:bg-background-input',
+                    isGenerating && 'opacity-50 cursor-not-allowed'
+                  )}
+                  aria-pressed={imageQuality === 'standard'}
+                >
+                  <span className="block text-base font-bold">Standard</span>
+                  <span className="block text-xs mt-0.5">Fast & Free (Gemini 2.5 Flash)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setImageQuality('pro')}
+                  disabled={isGenerating}
+                  className={cn(
+                    'text-center px-4 py-3 rounded-lg transition-all border-2',
+                    'focus:outline-none focus:ring-2 focus:ring-accent-purple focus:ring-offset-2 focus:ring-offset-background',
+                    imageQuality === 'pro'
+                      ? 'bg-accent-purple/20 border-accent-purple text-text-primary'
+                      : 'bg-background-card border-background-input text-text-secondary hover:bg-background-input',
+                    isGenerating && 'opacity-50 cursor-not-allowed'
+                  )}
+                  aria-pressed={imageQuality === 'pro'}
+                >
+                  <span className="block text-base font-bold">Pro</span>
+                  <span className="block text-xs mt-0.5">Higher Quality (Gemini 3 Pro)</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Generate Button */}
         <motion.button
           onClick={handleGenerate}
@@ -343,6 +432,8 @@ export default function PhotoEvidence({
             Generated Evidence
           </h3>
           <ImageDisplay
+            scenario={scenario}
+            excuseText={excuseText}
             imageUrl={generatedImage}
             isLoading={isGenerating}
             accentColor={accentColor}

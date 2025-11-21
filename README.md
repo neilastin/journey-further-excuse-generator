@@ -21,7 +21,10 @@ Create `.env.local`:
 ```
 ANTHROPIC_API_KEY=your_key_here
 GEMINI_API_KEY=your_key_here
+SLACK_WEBHOOK_URL=your_webhook_url_here  # Optional: For Slack sharing
 ```
+
+**Note**: For Slack integration setup, see [SLACK-INTEGRATION.md](SLACK-INTEGRATION.md)
 
 ## Development
 
@@ -37,7 +40,10 @@ App runs at `http://localhost:5173`
 
 1. Push to GitHub
 2. Import in Vercel dashboard
-3. Set environment variables (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`)
+3. Set environment variables:
+   - `ANTHROPIC_API_KEY`
+   - `GEMINI_API_KEY`
+   - `SLACK_WEBHOOK_URL` (optional, for Slack sharing)
 4. Deploy
 
 ## Features
@@ -47,6 +53,7 @@ App runs at `http://localhost:5173`
 - Image generation with Gemini
 - Headshot upload and compositing
 - Robin Skidmore blame-shifting
+- **Slack integration** - 1-click sharing to Slack channels
 - Responsive design
 
 ## Security
@@ -66,4 +73,7 @@ App runs at `http://localhost:5173`
 └── tests/          # Playwright tests
 ```
 
-See `CLAUDE.md` for detailed development guidance.
+## Documentation
+
+- `CLAUDE.md` - Detailed development guidance
+- `SLACK-INTEGRATION.md` - Slack integration setup and format documentation
