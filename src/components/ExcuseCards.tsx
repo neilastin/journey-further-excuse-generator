@@ -136,6 +136,8 @@ export default function ExcuseCards({ excuses, isVisible, onTabChange }: ExcuseC
             text={activeExcuse.text}
             accentColor={activeExcuse.accentColor}
             index={0}
+            isSafeExcuse={activeTab === 'believable'}
+            onSwitchToRisky={() => handleTabChange('risky')}
           />
         </motion.div>
       </div>

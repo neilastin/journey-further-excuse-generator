@@ -252,6 +252,10 @@ export default async function handler(
       });
     }
 
+    // Get today's date for CCTV timestamps
+    const today = new Date();
+    const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
     // Visual style instructions matching comedic styles
     const visualStyleInstructions: Record<string, { withHeadshot: string; withoutHeadshot: string }> = {
       'Absurdist': {
@@ -508,7 +512,8 @@ LIGHTING:
 Create a photorealistic image with PARANOID, UNDER-SURVEILLANCE aesthetic. The subject must be 100% recognizable, photographed like they're being watched or documented as part of an elaborate conspiracy.
 
 PARANOID VISUAL ELEMENTS:
-- Surveillance camera aesthetic: security camera angles, timestamp overlays (short!)
+- Surveillance camera aesthetic: security camera angles
+- Timestamp overlays: ONLY show time (e.g., "14:23:45") - NO DATES. If you must include a date, use ${formattedDate}, but prefer time-only
 - Dramatic shadows suggesting being watched
 - Environmental clues of conspiracy: mysterious figures in background (blurred/distant)
 - Red string/conspiracy board aesthetic in background
@@ -534,6 +539,7 @@ Create environmental evidence with PARANOID, UNDER-SURVEILLANCE aesthetic. Docum
 PARANOID VISUAL ELEMENTS:
 - Surveillance camera aesthetic
 - Security footage style
+- Timestamp overlays: ONLY show time (e.g., "14:23:45") - NO DATES. If you must include a date, use ${formattedDate}, but prefer time-only
 - Conspiracy evidence scattered in environment
 - Ominous tracking/documentation feel
 - Hidden camera, caught-on-tape aesthetic

@@ -300,15 +300,14 @@ const VALID_COMEDY_STYLES = [
   'Corporate-jargon'
 ];
 
-// Styles available for random selection (excludes niche styles like Corporate-jargon and Passive-aggressive)
+// Styles available for random selection (excludes niche styles like Corporate-jargon, Passive-aggressive, and Paranoid)
 const RANDOM_COMEDY_STYLES = [
   'Absurdist',
   'Observational',
   'Deadpan',
   'Hyperbolic',
   'Ironic',
-  'Meta',
-  'Paranoid'
+  'Meta'
 ];
 
 const STYLE_INSTRUCTIONS: Record<string, string> = {

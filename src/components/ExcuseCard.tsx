@@ -9,6 +9,8 @@ interface ExcuseCardProps {
   text: string;
   accentColor: 'blue' | 'purple' | 'green';
   index: number;
+  isSafeExcuse?: boolean;
+  onSwitchToRisky?: () => void;
 }
 
 const accentColorClasses = {
@@ -32,7 +34,7 @@ const accentColorClasses = {
   },
 };
 
-function ExcuseCard({ title, text, accentColor, index }: ExcuseCardProps) {
+function ExcuseCard({ title, text, accentColor, index, isSafeExcuse, onSwitchToRisky }: ExcuseCardProps) {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -109,6 +111,19 @@ function ExcuseCard({ title, text, accentColor, index }: ExcuseCardProps) {
           <Check className="w-4 h-4" />
           Copied to clipboard!
         </p>
+      )}
+
+      {/* Encouragement for Safe Excuse */}
+      {isSafeExcuse && onSwitchToRisky && (
+        <div className="mt-4 pt-4 border-t border-text-muted/20">
+          <button
+            onClick={onSwitchToRisky}
+            className="text-sm font-medium text-accent-green hover:text-accent-green/80 transition-colors duration-200 flex items-center gap-2"
+          >
+            <span>Too believable for you? Check out the risky excuse!</span>
+            <span className="text-lg">🔥</span>
+          </button>
+        </div>
       )}
     </motion.div>
   );

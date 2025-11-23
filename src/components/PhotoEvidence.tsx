@@ -55,6 +55,7 @@ export default function PhotoEvidence({
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [showLinkedInWarning, setShowLinkedInWarning] = useState(false);
   const [showNoPhotoWarning, setShowNoPhotoWarning] = useState(false);
+  const [showSafeExcuseWarning, setShowSafeExcuseWarning] = useState(false);
 
   // Luscious Locks easter egg state
   const [outfitToggleCount, setOutfitToggleCount] = useState(0);
@@ -140,6 +141,21 @@ export default function PhotoEvidence({
   }, []);
 
   const handleGenerate = useCallback(() => {
+    // Show warning if trying to generate for safe excuse
+    if (excuseType === 'excuse1') {
+      setShowSafeExcuseWarning(true);
+      return;
+    }
+
+    if (headshot) {
+      onGenerate(headshot.base64, headshot.mimeType, keepSameClothes, aspectRatio, lusciousLocksEnabled, imageQuality);
+    } else {
+      onGenerate(undefined, undefined, undefined, aspectRatio, lusciousLocksEnabled, imageQuality);
+    }
+  }, [headshot, onGenerate, keepSameClothes, aspectRatio, lusciousLocksEnabled, imageQuality, excuseType]);
+
+  const handleGenerateAnyway = useCallback(() => {
+    setShowSafeExcuseWarning(false);
     if (headshot) {
       onGenerate(headshot.base64, headshot.mimeType, keepSameClothes, aspectRatio, lusciousLocksEnabled, imageQuality);
     } else {
@@ -448,6 +464,52 @@ export default function PhotoEvidence({
           )}
         </div>
       </div>
+
+      {/* Safe Excuse Warning Modal */}
+      <AnimatePresence>
+        {showSafeExcuseWarning && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80"
+            onClick={() => setShowSafeExcuseWarning(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-background-card rounded-card p-8 max-w-md w-full border-2 border-accent-purple shadow-2xl shadow-accent-purple/30"
+            >
+              <h3 className="text-2xl font-bold text-text-primary mb-4 text-center">
+                Wait, seriously? 🤔
+              </h3>
+              <p className="text-text-secondary text-base mb-6 text-center leading-relaxed">
+                You want to generate photo evidence for your <span className="text-accent-purple font-semibold">believable excuse</span>?
+                <br /><br />
+                That's like ordering a salad at a steakhouse - technically possible, but you're missing the point entirely.
+                <br /><br />
+                The risky excuse is where the real entertainment lives. Are you sure about this?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowSafeExcuseWarning(false)}
+                  className="flex-1 px-6 py-3 rounded-lg font-semibold bg-accent-green text-background hover:bg-accent-green/90 transition-colors shadow-lg shadow-accent-green/20"
+                >
+                  You're Right, I'll Try Risky
+                </button>
+                <button
+                  onClick={handleGenerateAnyway}
+                  className="flex-1 px-6 py-3 rounded-lg font-semibold bg-text-muted/20 text-text-muted hover:bg-text-muted/30 transition-colors border border-text-muted/40"
+                >
+                  Generate Anyway
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
