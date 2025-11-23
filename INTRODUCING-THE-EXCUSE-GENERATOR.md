@@ -59,8 +59,6 @@ But just in case someone you know might benefit from this tool, here's what it c
 
 **Consider your audience carefully.** What works for a colleague won't necessarily work for the CEO. Though to be fair, most things don't work for the CEO.
 
-**Use the Believable excuse first.** Save the Risky one for when your back is truly against the wall, or when you've already used up your credibility for the month.
-
 **Don't overuse this tool.** If you're generating excuses daily, the problem might not be the excuses. Though we're not here to judge. Actually, we are. A little bit.
 
 ---
@@ -74,6 +72,14 @@ The photographic evidence feature allows you to generate images that visually su
 Sometimes our photographic evidence creation team do a good job, and sometimes they don't. If you're not completely satisfied with your evidence, you could always spend a few years mastering photo editing yourself.
 
 Or, you could not be so guilty in the first place I guess.
+
+### Sharing Your Masterpiece
+
+Once you've generated your photographic evidence, you'll notice two buttons that appear with all the subtlety of someone who's just remembered they have an urgent dentist appointment.
+
+**Share to Slack** - For when you want to immortalise your excuse in the #excuses channel where your colleagues can admire your creativity. One click, and your excuse (complete with evidence) will be posted anonymously for all to see. We say "anonymously" but let's be honest, everyone will know it's you. The button only works once per image because even we have limits to how much we'll enable your excuses clogging up the company Slack.
+
+**Download** - For the more discreet excuse-maker. Download your evidence to share elsewhere, perhaps somewhere your manager isn't watching. Just remember to get permission from anyone whose face appears in the image. We can generate the excuse, but we can't help with the awkward conversation when Dave from Accounts discovers you've put him in a fabricated CCTV screenshot.
 
 ---
 

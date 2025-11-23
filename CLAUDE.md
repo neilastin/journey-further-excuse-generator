@@ -25,6 +25,7 @@ Create `.env.local`:
 ```
 ANTHROPIC_API_KEY=your-key-here
 GEMINI_API_KEY=your-key-here
+SLACK_WEBHOOK_URL=your-webhook-url-here  # Optional: For Slack sharing
 ```
 **Note**: No quotes around values
 
@@ -37,15 +38,16 @@ npm run test:smoke   # Run smoke tests
 ## Project Structure
 
 ```
-├── api/                     # Vercel serverless functions
-│   ├── generate-excuses.ts  # Claude API
-│   └── generate-image.ts    # Gemini API
+├── api/                       # Vercel serverless functions
+│   ├── generate-excuses.ts    # Claude API
+│   ├── generate-image.ts      # Gemini API
+│   └── share-to-slack.ts      # Slack webhook integration
 ├── src/
-│   ├── components/          # React components
-│   ├── lib/                 # Utilities, constants, options
-│   └── index.css            # Global styles + Tailwind theme
-├── dev-server.js            # Local API server
-└── .env.local               # API keys (create this!)
+│   ├── components/            # React components
+│   ├── lib/                   # Utilities, constants, options
+│   └── index.css              # Global styles + Tailwind theme
+├── dev-server.js              # Local API server
+└── .env.local                 # API keys (create this!)
 ```
 
 ## Technical Notes
@@ -78,7 +80,23 @@ npm run test:smoke   # Run smoke tests
 - `src/lib/taglineVariations.ts` - Hero taglines
 - `api/generate-excuses.ts` - AI prompt engineering
 
+## Features (v1.1)
+
+### Core Features
+- **Excuse Generation**: AI-powered excuses with Claude API
+- **Photo Evidence**: Gemini-powered image generation with headshot compositing
+- **Slack Integration**: One-click sharing to #excuses channel
+- **Customization**: 10 comedy styles, narrative elements, excuse focus options
+- **Robin Skidmore**: Special blame-shifting mode
+
+### v1.1 UX Improvements
+- **Safe Excuse Engagement**: Encouragement text driving users to risky excuses
+- **Image Generation Warning**: Humorous modal when generating images for believable excuses
+- **Slack Share Prevention**: One-time sharing per image to prevent spam
+- **Comedy Style Refinement**: Paranoid excluded from random selection (available via customization)
+- **CCTV Date Fixes**: Current date or time-only timestamps on surveillance images
+
 ## Known Issues
 
-- Robin Skidmore image generation blocked by content filter
+- Robin Skidmore image generation occasionally blocked by content filter
 - Two-person facial identity preservation needs improvement
