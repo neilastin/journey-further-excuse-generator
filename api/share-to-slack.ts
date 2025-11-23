@@ -109,29 +109,40 @@ export default async function handler(
       imageUrl = 'https://via.placeholder.com/800x450.png?text=Development+Mode+-+Image+Upload+Skipped';
     } else {
       // Production: Upload to Vercel Blob
-      const base64Match = imageBase64.match(/^data:image\/(png|jpeg|jpg);base64,(.+)$/);
-      if (!base64Match) {
-        return res.status(400).json({
-          success: false,
-          message: 'Invalid image format'
+      try {
+        console.log('Production mode: Attempting Vercel Blob upload');
+        const base64Match = imageBase64.match(/^data:image\/(png|jpeg|jpg);base64,(.+)$/);
+        if (!base64Match) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid image format'
+          });
+        }
+
+        const mimeType = base64Match[1] === 'jpg' ? 'jpeg' : base64Match[1];
+        const base64Data = base64Match[2];
+        const imageBuffer = Buffer.from(base64Data, 'base64');
+
+        console.log(`Uploading image: ${imageBuffer.length} bytes, type: ${mimeType}`);
+
+        // Generate unique filename with timestamp
+        const timestamp = Date.now();
+        const filename = `excuse-${timestamp}.${mimeType}`;
+
+        // Upload to Vercel Blob with timeout
+        const blob = await put(filename, imageBuffer, {
+          access: 'public',
+          contentType: `image/${mimeType}`,
         });
+
+        imageUrl = blob.url;
+        console.log('Blob upload successful:', imageUrl);
+      } catch (blobError) {
+        console.error('Vercel Blob upload failed:', blobError);
+        // Fallback to placeholder if blob upload fails
+        console.log('Falling back to placeholder image');
+        imageUrl = 'https://via.placeholder.com/800x450.png?text=Image+Upload+Failed';
       }
-
-      const mimeType = base64Match[1] === 'jpg' ? 'jpeg' : base64Match[1];
-      const base64Data = base64Match[2];
-      const imageBuffer = Buffer.from(base64Data, 'base64');
-
-      // Generate unique filename with timestamp
-      const timestamp = Date.now();
-      const filename = `excuse-${timestamp}.${mimeType}`;
-
-      // Upload to Vercel Blob
-      const blob = await put(filename, imageBuffer, {
-        access: 'public',
-        contentType: `image/${mimeType}`,
-      });
-
-      imageUrl = blob.url;
     }
 
     // Format excuse type for display
