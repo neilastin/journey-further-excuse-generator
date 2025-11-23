@@ -483,14 +483,14 @@ export default function PhotoEvidence({
               className="bg-background-card rounded-card p-8 max-w-md w-full border-2 border-accent-purple shadow-2xl shadow-accent-purple/30"
             >
               <h3 className="text-2xl font-bold text-text-primary mb-4 text-center">
-                Wait, seriously? 🤔
+                Seriously?
               </h3>
               <p className="text-text-secondary text-base mb-6 text-center leading-relaxed">
                 You want to generate photo evidence for your <span className="text-accent-purple font-semibold">believable excuse</span>?
                 <br /><br />
-                That's like ordering a salad at a steakhouse - technically possible, but you're missing the point entirely.
+                This is technically possible, but I think you're missing the point! The risky excuse is where it's at! This is the bit that Nastino spent countless hours coding (countless minutes telling AI to code).
                 <br /><br />
-                The risky excuse is where the real entertainment lives. Are you sure about this?
+                Are you sure about this?
               </p>
               <div className="flex gap-3">
                 <button

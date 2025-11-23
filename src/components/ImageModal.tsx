@@ -23,7 +23,7 @@ export default function ImageModal({
 }: ImageModalProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  const [shareSuccess, setShareSuccess] = useState(false);
+  const [hasSharedToSlack, setHasSharedToSlack] = useState(false);
   const [shareError, setShareError] = useState<string | null>(null);
 
   const handleDownload = useCallback(() => {
@@ -47,7 +47,7 @@ export default function ImageModal({
   }, [imageUrl, isDownloading, excuseType, onClose]);
 
   const handleShareToSlack = useCallback(async () => {
-    if (!imageUrl || !excuseType) return;
+    if (!imageUrl || !excuseType || hasSharedToSlack) return;
 
     setIsSharing(true);
     setShareError(null);
@@ -67,8 +67,7 @@ export default function ImageModal({
       const data: ShareToSlackResponse = await response.json();
 
       if (data.success) {
-        setShareSuccess(true);
-        setTimeout(() => setShareSuccess(false), 3000);
+        setHasSharedToSlack(true);
       } else {
         setShareError(data.message || 'Failed to share to Slack');
         setTimeout(() => setShareError(null), 5000);
@@ -80,7 +79,7 @@ export default function ImageModal({
     } finally {
       setIsSharing(false);
     }
-  }, [imageUrl, excuseType, scenario, excuseText]);
+  }, [imageUrl, excuseType, scenario, excuseText, hasSharedToSlack]);
 
   // Close on ESC key
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -150,33 +149,33 @@ export default function ImageModal({
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ delay: 0.2 }}
                 onClick={handleShareToSlack}
-                disabled={isSharing}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                disabled={isSharing || hasSharedToSlack}
+                whileHover={!hasSharedToSlack ? { scale: 1.05 } : {}}
+                whileTap={!hasSharedToSlack ? { scale: 0.95 } : {}}
                 className={cn(
                   'px-6 py-3 rounded-lg font-semibold',
                   'shadow-lg',
                   'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black',
                   'flex items-center gap-2',
                   'transition-all duration-200',
-                  shareSuccess
-                    ? 'bg-accent-green text-background shadow-accent-green/30 focus:ring-accent-green'
+                  hasSharedToSlack
+                    ? 'bg-accent-green text-background shadow-accent-green/30 focus:ring-accent-green cursor-not-allowed'
                     : shareError
                     ? 'bg-red-500 text-background shadow-red-500/30 focus:ring-red-500'
                     : 'bg-accent-purple text-background shadow-accent-purple/30 focus:ring-accent-purple',
                   isSharing && 'opacity-50 cursor-not-allowed'
                 )}
-                aria-label={isSharing ? 'Sharing...' : shareSuccess ? 'Shared!' : 'Share to Slack'}
+                aria-label={isSharing ? 'Sharing...' : hasSharedToSlack ? 'Already Shared to Slack' : 'Share to Slack'}
               >
                 {isSharing ? (
                   <>
                     <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                     Sharing...
                   </>
-                ) : shareSuccess ? (
+                ) : hasSharedToSlack ? (
                   <>
                     <Check className="w-5 h-5" />
-                    Shared!
+                    Already Shared
                   </>
                 ) : shareError ? (
                   <>
