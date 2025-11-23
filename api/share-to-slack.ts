@@ -99,8 +99,10 @@ export default async function handler(
     // Handle image upload differently for dev vs production
     let imageUrl: string;
 
-    // Check if we're in development (no BLOB_READ_WRITE_TOKEN)
-    const isDevelopment = !process.env.BLOB_READ_WRITE_TOKEN;
+    // Check if we're in development (not running on Vercel)
+    const isDevelopment = !process.env.VERCEL;
+    console.log('Environment check - VERCEL:', process.env.VERCEL);
+    console.log('Environment check - BLOB_READ_WRITE_TOKEN:', process.env.BLOB_READ_WRITE_TOKEN ? 'SET' : 'NOT SET');
 
     if (isDevelopment) {
       // In development, we'll use a workaround since Slack doesn't support base64 in block images
