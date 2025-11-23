@@ -173,6 +173,11 @@ export default async function handler(
     // Calculate share count (inverse of remaining)
     const shareCount = MAX_SHARES_PER_HOUR - remaining;
 
+    // Log the image URL for debugging
+    console.log('Image URL for Slack:', imageUrl);
+    console.log('Image URL type:', typeof imageUrl);
+    console.log('Image URL length:', imageUrl?.length);
+
     // Build Slack message using attachments format
     // ⚠️ CRITICAL: Use "attachments" format, NOT Block Kit "blocks" format
     // Block Kit was consistently rejected with "invalid_blocks" error
@@ -201,6 +206,9 @@ export default async function handler(
         }
       ]
     };
+
+    // Log the complete Slack message for debugging
+    console.log('Complete Slack message:', JSON.stringify(slackMessage, null, 2));
 
     // Post to Slack
     const slackResponse = await fetch(webhookUrl, {
