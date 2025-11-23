@@ -179,21 +179,11 @@ export default async function handler(
     // The attachments format is older but more reliable
     // See SLACK-INTEGRATION.md for full documentation
     const slackMessage = {
-      text: `:fox_face: *New Excuse Generated*`,
+      text: `:excuseme: *New excuse incoming...*`,
       attachments: [
         {
           color: excuseType === 'excuse1' ? '#00a651' : excuseType === 'excuse2' ? '#e01e5a' : '#9b59b6',
           fields: [
-            {
-              title: 'Type',
-              value: `${excuseTypeEmoji} ${excuseTypeDisplay}`,
-              short: true
-            },
-            {
-              title: 'Shares This Hour',
-              value: `${shareCount}/${MAX_SHARES_PER_HOUR}`,
-              short: true
-            },
             {
               title: 'Situation',
               value: truncatedScenario,

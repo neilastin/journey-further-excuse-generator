@@ -1,9 +1,8 @@
 import { useState, useEffect, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Maximize2, Share2 } from 'lucide-react';
+import { Image as ImageIcon, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ImageModal from './ImageModal';
-import type { ShareToSlackResponse } from '@/types';
 
 interface ImageDisplayProps {
   scenario: string;
@@ -58,9 +57,6 @@ function ImageDisplay({
 }: ImageDisplayProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [isSharing, setIsSharing] = useState(false);
-  const [shareSuccess, setShareSuccess] = useState(false);
-  const [shareError, setShareError] = useState<string | null>(null);
   const colorClasses = accentColorClasses[accentColor];
 
   // Rotate through loading messages
@@ -89,42 +85,6 @@ function ImageDisplay({
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
-
-  const handleShareToSlack = useCallback(async () => {
-    if (!imageUrl || !excuseType) return;
-
-    setIsSharing(true);
-    setShareError(null);
-
-    try {
-      const response = await fetch('/api/share-to-slack', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          scenario,
-          excuseText,
-          excuseType,
-          imageBase64: imageUrl,
-        }),
-      });
-
-      const data: ShareToSlackResponse = await response.json();
-
-      if (data.success) {
-        setShareSuccess(true);
-        setTimeout(() => setShareSuccess(false), 3000);
-      } else {
-        setShareError(data.message || 'Failed to share to Slack');
-        setTimeout(() => setShareError(null), 5000);
-      }
-    } catch (error) {
-      console.error('Share to Slack error:', error);
-      setShareError('Failed to share to Slack');
-      setTimeout(() => setShareError(null), 5000);
-    } finally {
-      setIsSharing(false);
-    }
-  }, [imageUrl, excuseType, scenario, excuseText]);
 
   return (
     <div
@@ -266,56 +226,6 @@ function ImageDisplay({
         )}
       </AnimatePresence>
 
-      {/* Share to Slack Button - Shows when image is generated */}
-      <AnimatePresence>
-        {imageUrl && !isLoading && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10"
-          >
-            <button
-              onClick={handleShareToSlack}
-              disabled={isSharing}
-              className={cn(
-                'flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition-all',
-                'bg-background-card/95 backdrop-blur-sm',
-                'border-2 shadow-lg',
-                shareSuccess
-                  ? 'border-accent-green bg-accent-green/10 text-accent-green'
-                  : shareError
-                  ? 'border-red-500 bg-red-500/10 text-red-400'
-                  : 'border-accent-purple bg-accent-purple/10 text-accent-purple hover:bg-accent-purple/20',
-                isSharing && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              {isSharing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  <span>Sharing...</span>
-                </>
-              ) : shareSuccess ? (
-                <>
-                  <span className="text-xl">✓</span>
-                  <span>Shared!</span>
-                </>
-              ) : shareError ? (
-                <>
-                  <span className="text-xl">✗</span>
-                  <span>{shareError}</span>
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-4 h-4" />
-                  <span>Share to Slack #excuses</span>
-                </>
-              )}
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Full Screen Image Modal */}
       {imageUrl && (
         <ImageModal
@@ -323,6 +233,8 @@ function ImageDisplay({
           imageUrl={imageUrl}
           onClose={handleCloseModal}
           excuseType={excuseType}
+          scenario={scenario}
+          excuseText={excuseText}
         />
       )}
     </div>
