@@ -159,10 +159,10 @@ export default function ImageModal({
                   'flex items-center gap-2',
                   'transition-all duration-200',
                   hasSharedToSlack
-                    ? 'bg-accent-green text-background shadow-accent-green/30 focus:ring-accent-green cursor-not-allowed'
+                    ? 'bg-accent-green text-white shadow-accent-green/30 focus:ring-accent-green cursor-not-allowed'
                     : shareError
-                    ? 'bg-red-500 text-background shadow-red-500/30 focus:ring-red-500'
-                    : 'bg-accent-purple text-background shadow-accent-purple/30 focus:ring-accent-purple',
+                    ? 'bg-red-500 text-white shadow-red-500/30 focus:ring-red-500'
+                    : 'bg-accent-purple text-white shadow-accent-purple/30 focus:ring-accent-purple',
                   isSharing && 'opacity-50 cursor-not-allowed'
                 )}
                 aria-label={isSharing ? 'Sharing...' : hasSharedToSlack ? 'Already Shared to Slack' : 'Share to Slack'}
